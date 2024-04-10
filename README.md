@@ -1,3 +1,19 @@
-# FeelNow-Anxietytracker
-Anxiety Tracking jurnal
-- Soll mit Kategorien (Symptome ect.) die Anxiety tracken und Speichern und den Verlauf darstelle. 
+# FeelNow-AnxietyTracker
+Anxiety Tracking journal
+
+- Mit verschiedenen Kategorien (Symptome, Gedanken etc.) soll die Attacke getrackt und gespeicht werden, ausserdem soll ein Verlauf in der Historie dargestellt werden.
+
+Persona Template:
+
+Unsere Person ist Student, der zu Hause Katzen hat und mitte 20 Jahre alt ist
+Das Problem ist, dass dieser unter Angststörungen mit periodischen Angst-/Panikattacken leidet und darüber sich einen Überblick verschaffen möchte und ein besseres Verständnis für seine Gedanken bekommen und vor allem eine Übersicht seiner Attacken.
+
+Ein typischer Tag ist wie folgt gestaltet:
+- Aufstehen zwischen 6 und 9 Uhr
+- Social media checken
+- Uni
+- Lernen für Uni
+- Anxiety - Attack
+- lesen/Netflix etc.
+- Social media
+- Schlafen zwischen 23 und 1 Uhr
