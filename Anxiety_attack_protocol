@@ -5,7 +5,8 @@ def anxiety_attack_protocol():
     # Check if the session state object exists, if not, initialize it
     if 'button_count' not in st.session_state:
         st.session_state.button_count = 0
-        st.session_state.time_severity = []
+        st.session_state.times = []
+        st.session_state.severities = []
 
     st.write("Anxiety Attack Protocol Page")
 
@@ -13,12 +14,11 @@ def anxiety_attack_protocol():
     date_selected = st.date_input("Date", value=datetime.date.today())
 
     # Question 2: Time & Severity
-    time_severity = add_time_severity()
-    
+    add_time_severity()
+
     # Question 3: Symptoms
     st.subheader("Symptoms:")
     symptoms_anxiety = st.checkbox("Anxiety")
-    symptoms_panic_attack = st.checkbox("Panic Attack")
     symptoms_palpitations = st.checkbox("Palpitations")
     symptoms_sweating = st.checkbox("Sweating")
     symptoms_trembling = st.checkbox("Trembling")
@@ -40,17 +40,27 @@ def anxiety_attack_protocol():
 
 def add_time_severity():
     st.subheader("Time & Severity")
-    time_severity = []
+    
+    # Initialize times list if not already initialized
+    if 'times' not in st.session_state:
+        st.session_state.times = []
 
     for i in range(st.session_state.button_count + 1):
-        time_selected = st.time_input(f"Time {i+1}", value=datetime.datetime.now().time())
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10)
-        time_severity.append((time_selected, severity))
+        if i < len(st.session_state.times):
+            time_selected, severity = st.session_state.times[i]
+        else:
+            time_selected = datetime.datetime.now().time()
+            severity = 1
+        
+        time_selected = st.time_input(f"Time {i+1}", value=time_selected)
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
+        
+        # Update time and severity in session state
+        st.session_state.times[i] = (time_selected, severity)
 
     if st.button("Add Time & Severity"):
         st.session_state.button_count += 1
 
-    return time_severity
 
 def main_page():
     st.title("FeelNow")
