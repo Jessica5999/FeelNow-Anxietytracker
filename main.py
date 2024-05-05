@@ -4,6 +4,10 @@ from pages import Login
 from pages import Attack 
 from pages import Anxiety_Attack_Protocol
 from pages import Anxiety_protocol
+github = Githubcontents(
+    st.secrets["github"]["owner"],
+    st.secrets["github"]["repo"],
+    st.secrets["github"]["token"])
 
 PAGE_TITLE_MAP = {
     "Main Page": Mainpage,
