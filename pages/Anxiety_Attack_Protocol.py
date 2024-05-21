@@ -1,11 +1,19 @@
 import streamlit as st
 import datetime
 import csv
+import os
 
 def save_to_csv(data, filename='anxiety_data.csv'):
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(data)
+
+def read_csv(filename='anxiety_data.csv'):
+    if os.path.exists(filename):
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
+            return list(reader)
+    return []
 
 def anxiety_attack_protocol():
     # Check if the session state object exists, if not, initialize it
@@ -145,6 +153,15 @@ def add_time_severity():
 def main_page():
     st.title("FeelNow")
     anxiety_attack_protocol()
+
+    # Display saved data
+    st.header("Saved Data")
+    data = read_csv()
+    if data:
+        st.write("## Anxiety Attack Protocol Data")
+        st.table(data)
+    else:
+        st.write("No data available")
 
 if __name__ == "__main__":
     main_page()
