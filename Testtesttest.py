@@ -2,7 +2,7 @@ import streamlit as st
 from pages import Mainpage
 from pages import Login
 from pages import Attackt 
-from pages import Anxiety_Attack_Protocolt
+from pages import Anxiety_Attack_Protocol
 from pages import Anxiety_protocol
 from github_contents import GithubContents
 
