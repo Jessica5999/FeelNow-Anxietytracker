@@ -46,9 +46,7 @@ Page.display()
 st.sidebar.title("Anxiety_protocol")
 if st.sidebar.button("Submit Input"):
     user_input = {
-        "name": st.sidebar.text_input("Name"),
-        "email": st.sidebar.text_input("Email"),
-        "feedback": st.sidebar.text_area("Feedback")
+        "symptoms_cold": st.checkbox("Cold"),
     }
     save_input_to_csv(user_input)
 
