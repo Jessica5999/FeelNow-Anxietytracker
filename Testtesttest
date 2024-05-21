@@ -1,0 +1,47 @@
+import streamlit as st
+import pandas as pd
+from github_contents import GithubContents
+
+# GitHub-Verbindungsinformationen
+github = GithubContents(
+    st.secrets["github"]["owner"],
+    st.secrets["github"]["repo"],
+    st.secrets["github"]["token"]
+)
+
+# Laden der CSV-Datei
+csv_file = "data.csv"
+data = pd.read_csv(csv_file)
+
+# Funktionen zum Speichern von Daten in der CSV-Datei
+def save_login_data(username, password):
+    new_row = pd.DataFrame({"Username": [username], "Password": [password]})
+    data = pd.concat([data, new_row], ignore_index=True)
+    data.to_csv(csv_file, index=False)
+    github.upload_file(csv_file)
+
+# Hier fügen Sie die Funktionen für die anderen Seiten hinzu, um die entsprechenden Daten zu speichern
+
+# Beispiel-Streamlit-App
+def main():
+    st.title("Data Entry App")
+
+    # Seiten-Navigation
+    page_selection = st.radio("Go to page:", ("Login Page", "Anxiety Attack Protocol Page", "Anxiety Protocol Page"))
+
+    if page_selection == "Login Page":
+        st.subheader("Login Page")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            save_login_data(username, password)
+            st.success("Login successful!")
+    elif page_selection == "Anxiety Attack Protocol Page":
+        st.subheader("Anxiety Attack Protocol Page")
+        # Hier fügen Sie die Eingabefelder für die Anxiety Attack Protocol Page hinzu
+    elif page_selection == "Anxiety Protocol Page":
+        st.subheader("Anxiety Protocol Page")
+        # Hier fügen Sie die Eingabefelder für die Anxiety Protocol Page hinzu
+
+if __name__ == "__main__":
+    main()
