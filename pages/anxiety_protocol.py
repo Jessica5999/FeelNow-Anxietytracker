@@ -198,16 +198,15 @@ def main():
             login_page()
         elif options == "Register":
             register_page()
+            
     else:
         st.sidebar.write(f"Logged in as {st.session_state['username']}")
-         page = st.sidebar.selectbox("Select a page", ["Anxiety Protocol"])
-
-        if page == "Anxiety Protocol":
-            main_page()
+        anxiety_protocol()
 
         logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
+            st.session_state.pop('username', None)
             st.experimental_rerun()
 
 if __name__ == "__main__":
