@@ -102,7 +102,12 @@ def main():
             register_page()
     else:
         st.sidebar.write(f"Logged in as {st.session_state['username']}")
-        anxiety_protocol()
+        page = st.sidebar.selectbox("Select a page", ["Anxiety Protocol", "Anxiety Attack Protocol"])
+
+        if page == "Anxiety Protocol":
+            anxiety_protocol()
+        elif page == "Anxiety Attack Protocol":
+            anxiety_attack_protocol()
 
         logout_button = st.button("Logout")
         if logout_button:
@@ -112,7 +117,7 @@ def main():
 
 def anxiety_protocol():
     username = st.session_state['username']
-    data_file = f"{username}_data.csv"
+    data_file = f"{username}_anxiety_protocol_data.csv"
     
     if 'data' not in st.session_state:
         if st.session_state.github.file_exists(data_file):
@@ -204,6 +209,136 @@ def anxiety_protocol():
     st.subheader("Saved Entries")
     st.write(st.session_state.data)
 
+def anxiety_attack_protocol():
+    username = st.session_state['username']
+    data_file = f"{username}_anxiety_attack_data.csv"
+
+    if 'attack_data' not in st.session_state:
+        if st.session_state.github.file_exists(data_file):
+            st.session_state.attack_data = st.session_state.github.read_df(data_file)
+        else:
+            st.session_state.attack_data = pd.DataFrame(columns=['Date', 'Time', 'Severity', 'Symptoms', 'Triggers', 'Help'])
+
+    st.title("Anxiety Attack Protocol")
+
+    # Check if the session state object exists, if not, initialize it
+    if 'button_count' not in st.session_state:
+        st.session_state.button_count = 0
+        st.session_state.times = []
+        st.session_state.severities = []
+
+    # Question 1: Date
+    date_selected = st.date_input("Date", value=datetime.date.today())
+
+    # Question 2: Time & Severity
+    add_time_severity()
+
+    # Question 3: Symptoms
+    st.subheader("Symptoms:")
+    col1, col2 = st.columns(2)
+    with col1:
+        symptoms_chestpain = st.checkbox("Chest Pain")
+        symptoms_chills = st.checkbox("Chills")
+        symptoms_cold = st.checkbox("Cold")
+        symptoms_coldhands = st.checkbox("Cold Hands")
+        symptoms_dizziness = st.checkbox("Dizziness")
+        symptoms_feelingdanger = st.checkbox("Feeling of danger")
+        symptoms_heartracing = st.checkbox("Heart racing")
+        symptoms_hotflushes = st.checkbox("Hot flushes")
+    with col2:
+        symptoms_nausea = st.checkbox("Nausea")
+        symptoms_nervous = st.checkbox("Nervousness")
+        symptoms_numbhands = st.checkbox("Numb Hands")
+        symptoms_numbness = st.checkbox("Numbness")
+        symptoms_shortbreath = st.checkbox("Shortness of Breath")
+        symptoms_sweating = st.checkbox("Sweating")
+        symptoms_tensemuscles = st.checkbox("Tense Muscles")
+        symptoms_tinglyhands = st.checkbox("Tingly Hands")
+        symptoms_trembling = st.checkbox("Trembling")
+        symptoms_tremor = st.checkbox("Tremor")
+        symptoms_weakness = st.checkbox("Weakness")
+
+    symptoms_list = []
+    for symptom in ["Chest Pain", "Chills", "Cold", "Cold Hands", "Dizziness", "Feeling of danger", "Heart racing", "Hot flushes", "Nausea", "Nervousness", "Numb Hands", "Numbness", "Shortness of Breath", "Sweating", "Tense Muscles", "Tingly Hands", "Trembling", "Tremor", "Weakness"]:
+        if st.checkbox(symptom):
+            symptoms_list.append(symptom)
+
+    if 'symptoms' not in st.session_state:
+        st.session_state.symptoms = []
+
+    # Display existing symptoms
+    for symptom in st.session_state.symptoms:
+        st.write(symptom)
+
+    new_symptom = st.text_input("Add new symptom:", key="new_attack_symptom")
+    if st.button("Add Symptom") and new_symptom:
+        st.session_state.symptoms.append(new_symptom)
+
+    # Question 4: Triggers
+    st.subheader("Triggers:")
+    triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
+    if 'triggers' not in st.session_state:
+        st.session_state.triggers = []
+
+    new_trigger = st.text_input("Add new trigger:")
+    if st.button("Add Trigger") and new_trigger:
+        st.session_state.triggers.append(new_trigger)
+
+    for trigger in st.session_state.triggers:
+        st.write(trigger)
+
+    # Question 5: Did something Help against the attack?
+    st.subheader("Did something Help against the attack?")
+    help_response = st.text_area("Write your response here", height=100)
+
+    if st.button("Save Entry"):
+        new_entry = {
+            'Date': date_selected,
+            'Time': [time.strftime('%H:%M') for time, severity in st.session_state.times],
+            'Severity': [severity for time, severity in st.session_state.times],
+            'Symptoms': ", ".join(symptoms_list),
+            'Triggers': ", ".join(triggers),
+            'Help': help_response
+        }
+        
+        # Create a DataFrame from the new entry
+        new_entry_df = pd.DataFrame([new_entry])
+        
+        # Append the new entry to the existing data DataFrame
+        st.session_state.attack_data = pd.concat([st.session_state.attack_data, new_entry_df], ignore_index=True)
+        
+        # Save the updated DataFrame to the user's specific CSV file on GitHub
+        st.session_state.github.write_df(data_file, st.session_state.attack_data, "added new entry")
+        st.success("Entry saved successfully!")
+
+    # Display saved entries
+    st.subheader("Saved Entries")
+    st.write(st.session_state.attack_data)
+
+def add_time_severity():
+    st.subheader("Time & Severity")
+    
+    for i in range(st.session_state.button_count + 1):
+        if i < len(st.session_state.times):
+            time_selected, severity = st.session_state.times[i]
+        else:
+            time_selected = datetime.datetime.now().time()
+            severity = 1
+
+        time_selected_str = time_selected.strftime('%H:%M')
+        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str)
+        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
+        
+        if len(st.session_state.times) <= i:
+            st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
+
+    if st.button("Add Time & Severity"):
+        st.session_state.button_count += 1
+
 if __name__ == "__main__":
     main()
+
 
