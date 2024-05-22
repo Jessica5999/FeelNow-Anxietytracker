@@ -40,4 +40,4 @@ def switch_pages(page_name):
     st.experimental_rerun()
 
 if __name__ == "__main__":
-    show() 
+    main_attack() 
