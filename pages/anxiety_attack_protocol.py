@@ -91,41 +91,17 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-def add_time_severity():
-    if 'time_severity_entries' not in st.session_state:
-        st.session_state.time_severity_entries = []
-
-    # Button to add a new time-severity entry
-    if st.button("Add Time & Severity"):
-        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
-        new_entry = {
-            'time': swiss_time,
-            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity)} 
-
-        # Update time and severity in session state
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
-
-    if st.button("Add Time & Severity"):
-        st.session_state.button_count += 1
-
-    # Display all time-severity entries
-    for entry in st.session_state.time_severity_entries:
-        st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
 
 def anxiety_attack_protocol():
-    username = st.session_state['username']
-    data_file = f"{username}_data.csv"
-    
-    if 'data' not in st.session_state:
-        if st.session_state.github.file_exists(data_file):
-            st.session_state.data = st.session_state.github.read_df(data_file)
-        else:
-            st.session_state.data = pd.DataFrame(columns=['Date', 'Time', 'Severity', 'Symptoms', 'Triggers', 'Help'])
+    # Check if the session state object exists, if not, initialize it
+    if 'button_count' not in st.session_state:
+        st.session_state.button_count = 0
+        st.session_state.times = []
+        st.session_state.severities = []
+        st.session_state.symptoms = []
+        st.session_state.triggers = []
 
-    st.title("Anxiety Attack Protocol")
+    st.write("Anxiety Attack Protocol")
 
     # Question 1: Date
     date_selected = st.date_input("Date", value=datetime.date.today())
@@ -177,9 +153,6 @@ def anxiety_attack_protocol():
     st.subheader("Triggers:")
     triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
     
-    if 'triggers' not in st.session_state:
-        st.session_state.triggers = []
-
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
         st.session_state.triggers.append(new_trigger)
@@ -190,6 +163,33 @@ def anxiety_attack_protocol():
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
+
+def add_time_severity():
+    st.subheader("Time & Severity")
+    
+    if 'times' not in st.session_state:
+        st.session_state.times = []
+
+    for i in range(st.session_state.button_count + 1):
+        if i < len(st.session_state.times):
+            time_selected, severity = st.session_state.times[i]
+        else:
+            time_selected = datetime.datetime.now().time()
+            severity = 1
+
+        time_selected_str = time_selected.strftime('%H:%M')
+        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str, key=f"time_input_{i}")
+        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
+        
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
+        
+        if len(st.session_state.times) <= i:
+            st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
+
+    if st.button("Add Time & Severity"):
+        st.session_state.button_count += 1
 
     if st.button("Save Entry"):
         new_entry = {
@@ -240,4 +240,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
