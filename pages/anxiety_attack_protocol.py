@@ -1,19 +1,6 @@
 import streamlit as st
 import datetime
 import csv
-import osimport streamlit as st
-from helpers import show
-
-# Other functions and logic here
-
-def main():
-    # Ensure show() is imported and called here
-    show()
-    # Other logic here
-
-if __name__ == "__main__":
-    main()
-
 
 def save_to_csv(data, filename='anxiety_data.csv'):
     with open(filename, mode='a', newline='') as file:
