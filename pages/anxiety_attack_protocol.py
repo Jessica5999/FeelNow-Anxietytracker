@@ -101,33 +101,7 @@ def anxiety_attack_protocol():
         st.session_state.symptoms = []
         st.session_state.triggers = []
 
-def add_time_severity():
-    st.subheader("Time & Severity")
     
-    if 'times' not in st.session_state:
-        st.session_state.times = []
-
-    for i in range(st.session_state.button_count + 1):
-        if i < len(st.session_state.times):
-            time_selected, severity = st.session_state.times[i]
-        else:
-            time_selected = datetime.datetime.now().time()
-            severity = 1
-
-        time_selected_str = time_selected.strftime('%H:%M')
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str, key=f"time_input_{i}")
-        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
-        
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
-        
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
-
-    if st.button("Add Time & Severity"):
-        st.session_state.button_count += 1
-
     st.write("Anxiety Attack Protocol")
 
     # Question 1: Date
