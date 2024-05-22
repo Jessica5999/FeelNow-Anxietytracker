@@ -91,18 +91,32 @@ def init_credentials():
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
 def add_time_severity():
-    st.subheader("Time & Severity:")
-    col1, col2 = st.columns(2)
-   
+    st.subheader("Time & Severity")
     
-    with col1:
-        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
-    with col2:
-        severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
-    
-    # Store these values in the session state so they can be accessed later
-    st.session_state.time_selected = time_selected
-    st.session_state.severity = severity
+    if 'times' not in st.session_state:
+        st.session_state.times = []
+
+    for i in range(st.session_state.button_count + 1):
+        if i < len(st.session_state.times):
+            time_selected, severity = st.session_state.times[i]
+        else:
+            time_selected = datetime.datetime.now().time()
+            severity = 1
+
+        time_selected_str = time_selected.strftime('%H:%M')
+        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str, key=f"time_input_{i}")
+        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
+        
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
+        
+        if len(st.session_state.times) <= i:
+            st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
+
+    if st.button("Add Time & Severity"):
+        st.session_state.button_count += 1¨
+
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
