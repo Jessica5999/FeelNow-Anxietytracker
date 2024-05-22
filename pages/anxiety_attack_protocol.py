@@ -206,6 +206,16 @@ def anxiety_attack_protocol():
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
+
+         if st.button("Save Entry"):
+        new_entry = {
+            'Date': date_selected,
+            'Time': time_selected,
+            'Severity': severity,
+            'Symptoms': symptoms,
+            'Triggers': triggers,
+            'Help': help_response
+        }
         
         # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
