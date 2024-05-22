@@ -175,6 +175,9 @@ def anxiety_attack_protocol():
     st.subheader("Triggers:")
     triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
     
+    if 'triggers' not in st.session_state:
+        st.session_state.triggers = []
+
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
         st.session_state.triggers.append(new_trigger)
@@ -189,9 +192,9 @@ def anxiety_attack_protocol():
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': time_selected,
-            'Severity': severity,
-            'Symptoms': symptoms,
+            'Time': st.session_state.time_selected,
+            'Severity': st.session_state.severity,
+            'Symptoms': st.session_state.symptoms,
             'Triggers': triggers,
             'Help': help_response
         }
@@ -209,8 +212,5 @@ def anxiety_attack_protocol():
     # Display saved entries
     st.subheader("Saved Entries")
     st.write(st.session_state.data)
-
-if __name__ == "__main__":
-    main()
 
 
