@@ -142,7 +142,7 @@ st.subheader("Any specific triggers? For example Stress, Caffeine, Lack of Sleep
 help_response = st.text_area("Write your response here", key="triggers", height=100)
 
     # Question 3: Symptoms
- st.subheader("Symptoms:")
+st.subheader("Symptoms:")
 col1, col2 = st.columns(2)
 with col1:
         symptoms_chestpain = st.checkbox("Chest Pain")
