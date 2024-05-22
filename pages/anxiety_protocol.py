@@ -200,7 +200,7 @@ def main():
             register_page()
     else:
         st.sidebar.write(f"Logged in as {st.session_state['username']}")
-        page = st.sidebar.selectbox("Select a page", ["Anxiety Protocol"])
+       
 
         if page == "Anxiety Protocol":
             main_page()
