@@ -148,8 +148,6 @@ def add_time_severity():
         # Update time and severity in session state
         if len(st.session_state.times) <= i:
             st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
 
     if st.button("Add Time & Severity"):
         st.session_state.button_count += 1
