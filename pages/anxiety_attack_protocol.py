@@ -93,10 +93,10 @@ def init_credentials():
 def add_time_severity():
     st.subheader("Time & Severity:")
     col1, col2 = st.columns(2)
-    time= swiss_time
+   
     
     with col1:
-        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
+        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now(pytz.timezone('Europe/Zurich')).time())
     with col2:
         severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
     
