@@ -126,25 +126,25 @@ def anxiety_protocol():
 st.title("Anxiety Protocol")
 
     # Question 1: Date
-    date_selected = st.date_input("Date", value=datetime.date.today())
+date_selected = st.date_input("Date", value=datetime.date.today())
 
     # Question 2: Where are you
-    st.subheader("Where are you and what is the environment?")
-    help_response = st.text_area("Write your response here", key="location", height=100)
+st.subheader("Where are you and what is the environment?")
+help_response = st.text_area("Write your response here", key="location", height=100)
     
-    st.subheader("Try to describe your anxiety right now?")
-    help_response = st.text_area("Write your response here", key="anxiety_description", height=100)
+st.subheader("Try to describe your anxiety right now?")
+help_response = st.text_area("Write your response here", key="anxiety_description", height=100)
 
-    st.subheader("What do you think could be the cause?")
-    help_response = st.text_area("Write your response here", key="cause", height=100)
+st.subheader("What do you think could be the cause?")
+help_response = st.text_area("Write your response here", key="cause", height=100)
     
-    st.subheader("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event")
-    help_response = st.text_area("Write your response here", key="triggers", height=100)
+st.subheader("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event")
+help_response = st.text_area("Write your response here", key="triggers", height=100)
 
     # Question 3: Symptoms
-    st.subheader("Symptoms:")
-    col1, col2 = st.columns(2)
-    with col1:
+ st.subheader("Symptoms:")
+col1, col2 = st.columns(2)
+with col1:
         symptoms_chestpain = st.checkbox("Chest Pain")
         symptoms_chills = st.checkbox("Chills")
         symptoms_cold = st.checkbox("Cold")
@@ -153,7 +153,7 @@ st.title("Anxiety Protocol")
         symptoms_feelingdanger = st.checkbox("Feeling of danger")
         symptoms_heartracing = st.checkbox("Heart racing")
         symptoms_hotflushes = st.checkbox("Hot flushes")
-    with col2:
+with col2:
         symptoms_nausea = st.checkbox("Nausea")
         symptoms_nervous = st.checkbox("Nervousness")
         symptoms_numbhands = st.checkbox("Numb Hands")
@@ -165,34 +165,34 @@ st.title("Anxiety Protocol")
         symptoms_trembling = st.checkbox("Trembling")
         symptoms_tremor = st.checkbox("Tremor")
         symptoms_weakness = st.checkbox("Weakness")
-    if 'symptoms' not in st.session_state:
+if 'symptoms' not in st.session_state:
         st.session_state.symptoms = []
 
     # Display existing symptoms
-    for symptom in st.session_state.symptoms:
+for symptom in st.session_state.symptoms:
         st.write(symptom)
 
-    new_symptom = st.text_input("Add new symptom:", key="new_symptom")
+new_symptom = st.text_input("Add new symptom:", key="new_symptom")
     if st.button("Add Symptom") and new_symptom:
         st.session_state.symptoms.append(new_symptom)
 
     # Question 5: Did something Help against the attack?
-    st.subheader("Did something Help against the Anxiety?")
-    help_response = st.text_area("Write your response here", key="help_response", height=100)
+st.subheader("Did something Help against the Anxiety?")
+help_response = st.text_area("Write your response here", key="help_response", height=100)
 
         # Create a DataFrame from the new entry
-        new_entry_df = pd.DataFrame([new_entry])
+new_entry_df = pd.DataFrame([new_entry])
         
         # Append the new entry to the existing data DataFrame
-        st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
+st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
         
         # Save the updated DataFrame to the user's specific CSV file on GitHub
-        st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
-        st.success("Entry saved successfully!")
+st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
+st.success("Entry saved successfully!")
 
     # Display saved entries
-    st.subheader("Saved Entries")
-    st.write(st.session_state.data)
+st.subheader("Saved Entries")
+st.write(st.session_state.data)
 
 if __name__ == "__main__":
     main()
