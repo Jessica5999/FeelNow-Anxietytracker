@@ -29,15 +29,15 @@ def show_main_page():
 
     answer = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
     if answer == "Yes":
-        switch_pages("anxiety_attack_protocol")
+        st.switch_page("pages/anxiety_attack_protocol")
     else:
         answer_2 = st.radio("Are you anxious right now?", ("Yes", "No"))
         if answer_2 == "Yes":
-            switch_pages("anxiety_protocol")
+            st.switch_page("pages/anxiety_protocol")
         else:
             st.write("Reassess your feelings.")
 
-def switch_pages(page_name):
+def switch_page(page_name):
     st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
     time.sleep(2)
     st.experimental_set_query_params(page=page_name)
