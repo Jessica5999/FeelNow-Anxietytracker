@@ -131,7 +131,7 @@ def anxiety_attack_protocol():
     # Question 2: Time & Severity
     time_selected = st.time_input("Time", value=datetime.datetime.now().time())
     severity = st.slider("Severity (1-10)", min_value=1, max_value=10, value=1)  
-    add_time_severity()
+    
 
     # Question 3: Symptoms
     # Question 3: Symptoms
