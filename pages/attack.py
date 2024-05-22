@@ -29,13 +29,13 @@ def show_main_page():
 
     answer = st.radio("Are you anxious right now?", ("Yes", "No"))
     if answer == "Yes":
-        switch_page("anxiety_protocol")
+        st.switch_page("anxiety_protocol.py")
     else:
         answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
         if answer_2 == "Yes":
-            switch_page("attack_protocol")
+            st.switch_page("attack_protocol")
         else:
-            st.write("Reassess your feelings.")
+            st.write("Reassess your feelings.py")
 
 def switch_page(page_name):
     st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
