@@ -164,5 +164,5 @@ def main_page():
         st.write("No data available")
 
 if __name__ == "__main__":
-    main_page()
+    show()
 
