@@ -4,6 +4,7 @@ import pandas as pd
 import bcrypt
 from github_contents import GithubContents
 import datetime
+import pytz  # For timezone handling
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -91,17 +92,21 @@ def init_credentials():
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
 def add_time_severity():
-    st.subheader("Time & Severity:")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
-    with col2:
-        severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
-    
-    # Store these values in the session state so they can be accessed later
-    st.session_state.time_selected = time_selected
-    st.session_state.severity = severity
+    if 'time_severity_entries' not in st.session_state:
+        st.session_state.time_severity_entries = []
+
+    # Button to add a new time-severity entry
+    if st.button("Add Severity"):
+        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+        new_entry = {
+            'time': swiss_time,
+            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
+        }
+        st.session_state.time_severity_entries.append(new_entry)
+
+    # Display all time-severity entries
+    for entry in st.session_state.time_severity_entries:
+        st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -182,8 +187,8 @@ def anxiety_attack_protocol():
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': st.session_state.time_selected,
-            'Severity': st.session_state.severity,
+            'Time': [entry['time'] for entry in st.session_state.time_severity_entries],
+            'Severity': [entry['severity'] for entry in st.session_state.time_severity_entries],
             'Symptoms': st.session_state.symptoms,
             'Triggers': triggers,
             'Help': help_response
