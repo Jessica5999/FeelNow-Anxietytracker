@@ -1,127 +1,96 @@
 import streamlit as st
+import pandas as pd
 import datetime
-import csv
-import os
 
-# Define the filename for storing data
-DATA_FILE = "anxiety_protocol_data.csv"
+# Konstanten
+DATA_FILE = "anxiety_data.csv"
 
-# Function to save data to CSV file
-def save_to_csv(data):
-    with open(DATA_FILE, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(data)
-
-# Function to read data from CSV file
-def read_csv():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, mode='r') as file:
-            reader = csv.reader(file)
-            return list(reader)
-    return []
+def show():
+    st.title("Anxiety Protocol")
 
 def anxiety_protocol():
-    if 'button_count' not in st.session_state:
-        st.session_state.button_count = 0
-        st.session_state.symptoms = []
+    if 'data' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE):
+            st.session_state.data = st.session_state.github.read_df(DATA_FILE)
+        else:
+            st.session_state.data = pd.DataFrame(columns=['Date', 'Location', 'Anxiety Description', 'Cause', 'Triggers', 'Symptoms', 'Help Response'])
 
     st.write("Anxiety Protocol Page")
 
     # Question 1: Date
     date_selected = st.date_input("Date", value=datetime.date.today())
 
-    # Question 2: Where are you
-    st.subheader("Where are you and what is the environment?")
-    location = st.text_area("Write your response here", key="location", height=100)
-    
-    st.subheader("Try to describe your anxiety right now?")
-    anxiety_description = st.text_area("Write your response here", key="anxiety_description", height=100)
+    # Question 2: Where are you and what is the environment?
+    location = st.text_area("Where are you and what is the environment?", key="location", height=100)
 
-    st.subheader("What do you think could be the cause?")
-    cause = st.text_area("Write your response here", key="cause", height=100)
+    anxiety_description = st.text_area("Try to describe your anxiety right now?", key="anxiety_description", height=100)
+
+    cause = st.text_area("What do you think could be the cause?", key="cause", height=100)
     
-    st.subheader("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event")
-    triggers = st.text_area("Write your response here", key="triggers", height=100)
+    triggers = st.text_area("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event", key="triggers", height=100)
 
     # Question 3: Symptoms
     st.subheader("Symptoms:")
     col1, col2 = st.columns(2)
-    symptoms = []
     with col1:
-        if st.checkbox("Chest Pain"):
-            symptoms.append("Chest Pain")
-        if st.checkbox("Chills"):
-            symptoms.append("Chills")
-        if st.checkbox("Cold"):
-            symptoms.append("Cold")
-        if st.checkbox("Cold Hands"):
-            symptoms.append("Cold Hands")
-        if st.checkbox("Dizziness"):
-            symptoms.append("Dizziness")
-        if st.checkbox("Feeling of danger"):
-            symptoms.append("Feeling of danger")
-        if st.checkbox("Heart racing"):
-            symptoms.append("Heart racing")
-        if st.checkbox("Hot flushes"):
-            symptoms.append("Hot flushes")
+        symptoms_chestpain = st.checkbox("Chest Pain")
+        symptoms_chills = st.checkbox("Chills")
+        symptoms_cold = st.checkbox("Cold")
+        symptoms_coldhands = st.checkbox("Cold Hands")
+        symptoms_dizziness = st.checkbox("Dizziness")
+        symptoms_feelingdanger = st.checkbox("Feeling of danger")
+        symptoms_heartracing = st.checkbox("Heart racing")
+        symptoms_hotflushes = st.checkbox("Hot flushes")
     with col2:
-        if st.checkbox("Nausea"):
-            symptoms.append("Nausea")
-        if st.checkbox("Nervousness"):
-            symptoms.append("Nervousness")
-        if st.checkbox("Numb Hands"):
-            symptoms.append("Numb Hands")
-        if st.checkbox("Numbness"):
-            symptoms.append("Numbness")
-        if st.checkbox("Shortness of Breath"):
-            symptoms.append("Shortness of Breath")
-        if st.checkbox("Sweating"):
-            symptoms.append("Sweating")
-        if st.checkbox("Tense Muscles"):
-            symptoms.append("Tense Muscles")
-        if st.checkbox("Tingly Hands"):
-            symptoms.append("Tingly Hands")
-        if st.checkbox("Trembling"):
-            symptoms.append("Trembling")
-        if st.checkbox("Tremor"):
-            symptoms.append("Tremor")
-        if st.checkbox("Weakness"):
-            symptoms.append("Weakness")
+        symptoms_nausea = st.checkbox("Nausea")
+        symptoms_nervous = st.checkbox("Nervousness")
+        symptoms_numbhands = st.checkbox("Numb Hands")
+        symptoms_numbness = st.checkbox("Numbness")
+        symptoms_shortbreath = st.checkbox("Shortness of Breath")
+        symptoms_sweating = st.checkbox("Sweating")
+        symptoms_tensemuscles = st.checkbox("Tense Muscles")
+        symptoms_tinglyhands = st.checkbox("Tingly Hands")
+        symptoms_trembling = st.checkbox("Trembling")
+        symptoms_tremor = st.checkbox("Tremor")
+        symptoms_weakness = st.checkbox("Weakness")
     
-    new_symptom = st.text_input("Add new symptom:", key="new_symptom")
-    if st.button("Add Symptom") and new_symptom:
-        st.session_state.symptoms.append(new_symptom)
-        symptoms.append(new_symptom)
+    symptoms_list = [symptoms_chestpain, symptoms_chills, symptoms_cold, symptoms_coldhands, symptoms_dizziness, symptoms_feelingdanger, 
+                     symptoms_heartracing, symptoms_hotflushes, symptoms_nausea, symptoms_nervous, symptoms_numbhands, symptoms_numbness, 
+                     symptoms_shortbreath, symptoms_sweating, symptoms_tensemuscles, symptoms_tinglyhands, symptoms_trembling, symptoms_tremor, 
+                     symptoms_weakness]
+    
+    symptoms = [symptom for i, symptom in enumerate(["Chest Pain", "Chills", "Cold", "Cold Hands", "Dizziness", "Feeling of danger", 
+                                                      "Heart racing", "Hot flushes", "Nausea", "Nervousness", "Numb Hands", "Numbness", 
+                                                      "Shortness of Breath", "Sweating", "Tense Muscles", "Tingly Hands", "Trembling", 
+                                                      "Tremor", "Weakness"]) if symptoms_list[i]]
+    
+    symptoms_text = ', '.join(symptoms)
 
     # Question 5: Did something Help against the attack?
-    st.subheader("Did something Help against the Anxiety?")
-    help_response = st.text_area("Write your response here", key="help_response", height=100)
+    help_response = st.text_area("Did something Help against the Anxiety?", key="help_response", height=100)
 
-    if st.button("Save Data"):
-        data = [
-            date_selected,
-            location,
-            anxiety_description,
-            cause,
-            triggers,
-            ", ".join(symptoms),
-            help_response
-        ]
-        save_to_csv(data)
-        st.success("Data saved successfully!")
+    if st.button("Save Entry"):
+        new_entry = {
+            'Date': date_selected,
+            'Location': location,
+            'Anxiety Description': anxiety_description,
+            'Cause': cause,
+            'Triggers': triggers,
+            'Symptoms': symptoms_text,
+            'Help Response': help_response
+        }
+        st.session_state.data = st.session_state.data.append(new_entry, ignore_index=True)
+        st.session_state.github.write_df(DATA_FILE, st.session_state.data, "added new entry")
+        st.success("Entry saved successfully!")
+
+    # Display saved entries
+    st.subheader("Saved Entries")
+    st.write(st.session_state.data)
 
 def main_page():
     st.title("FeelNow")
     anxiety_protocol()
 
-    # Display saved data
-    st.header("Saved Data")
-    data = read_csv()
-    if data:
-        st.write("## Anxiety Protocol Data")
-        st.table(data)
-    else:
-        st.write("No data available")
-
 if __name__ == "__main__":
     main_page()
+
