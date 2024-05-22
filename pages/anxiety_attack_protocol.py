@@ -100,14 +100,10 @@ def add_time_severity():
         swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
         new_entry = {
             'time': swiss_time,
-            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
+            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity) (key=f"severity_{len(st.session_state.time_severity_entries)}")
         }
         st.session_state.time_severity_entries.append(new_entry)
-
-            # Convert the string back to datetime.time object
-        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
         
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
 
 
     # Display all time-severity entries
