@@ -202,9 +202,6 @@ def main():
         st.sidebar.write(f"Logged in as {st.session_state['username']}")
        
 
-        if page == "Anxiety Protocol":
-            main_page()
-
         logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
