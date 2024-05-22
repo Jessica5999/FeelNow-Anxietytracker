@@ -88,6 +88,8 @@ def init_credentials():
             st.session_state.df_users = st.session_state.github.read_df(DATA_FILE)
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
+def switch_page(page_name):
+    st.success("Redirecting to {} page...".format(page_name))
 
 def main():
     init_github()
