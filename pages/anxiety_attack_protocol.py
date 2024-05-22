@@ -207,7 +207,7 @@ def anxiety_attack_protocol():
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
 
-         if st.button("Save Entry"):
+    if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
             'Time': time_selected,
