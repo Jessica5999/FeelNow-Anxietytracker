@@ -4,7 +4,6 @@ import pandas as pd
 import bcrypt
 from github_contents import GithubContents
 import datetime
-import pytz  # For timezone handling
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -91,6 +90,18 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
+def add_time_severity():
+    st.subheader("Time & Severity:")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
+    with col2:
+        severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
+    
+    # Store these values in the session state so they can be accessed later
+    st.session_state.time_selected = time_selected
+    st.session_state.severity = severity
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -154,6 +165,9 @@ def anxiety_attack_protocol():
     st.subheader("Triggers:")
     triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
     
+    if 'triggers' not in st.session_state:
+        st.session_state.triggers = []
+
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
         st.session_state.triggers.append(new_trigger)
@@ -165,45 +179,11 @@ def anxiety_attack_protocol():
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
 
-def add_time_severity():
-st.subheader("Time & Severity")
-    
-    # Initialize times list if not already initialized
-    if 'times' not in st.session_state:
-        st.session_state.times = []
-
-    for i in range(st.session_state.button_count + 1):
-        if i < len(st.session_state.times):
-            time_selected, severity = st.session_state.times[i]
-        else:
-            time_selected = datetime.datetime.now().time()
-            severity = 1
-
-        # Convert time_selected to string with minute precision
-        time_selected_str = time_selected.strftime('%H:%M')
-        
-        # Display time input with minute precision
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str)
-        
-        # Convert the string back to datetime.time object
-        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
-        
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
-        
-        # Update time and severity in session state
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
-
-    if st.button("Add Time & Severity"):
-        st.session_state.button_count += 1
-
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': [entry['time'] for entry in st.session_state.time_severity_entries],
-            'Severity': [entry['severity'] for entry in st.session_state.time_severity_entries],
+            'Time': st.session_state.time_selected,
+            'Severity': st.session_state.severity,
             'Symptoms': st.session_state.symptoms,
             'Triggers': triggers,
             'Help': help_response
@@ -248,3 +228,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
