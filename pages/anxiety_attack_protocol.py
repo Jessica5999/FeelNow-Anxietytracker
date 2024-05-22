@@ -134,11 +134,73 @@ def anxiety_attack_protocol():
 
     # Question 3: Symptoms
     st.subheader("Symptoms:")
-    symptoms = st.text_area("List your symptoms separated by commas")
+    col1, col2 = st.columns(2)
+    with col1:
+        symptoms_anxiety = st.checkbox("Anxiety")
+        symptoms_chestpain = st.checkbox("Chest Pain")
+        symptoms_chills = st.checkbox("Chills")
+        symptoms_chocking = st.checkbox("Chocking")
+        symptoms_cold = st.checkbox("Cold")
+        symptoms_coldhands = st.checkbox("Cold Hands")
+        symptoms_dizziness = st.checkbox("Dizziness")
+        symptoms_feelingdanger = st.checkbox("Feeling of danger")
+        symptoms_feelingdread = st.checkbox("Feeling of dread")
+        symptoms_heartracing = st.checkbox("Heart racing")
+        symptoms_hotflushes = st.checkbox("Hot flushes")
+        symptoms_irrationalthinking = st.checkbox("Irrational thinking")
+    with col2:
+        symptoms_nausea = st.checkbox("Nausea")
+        symptoms_nervous = st.checkbox("Nervousness")
+        symptoms_numbhands = st.checkbox("Numb Hands")
+        symptoms_numbness = st.checkbox("Numbness")
+        symptoms_palpitations = st.checkbox("Palpitations")
+        symptoms_shortbreath = st.checkbox("Shortness of Breath")
+        symptoms_sweating = st.checkbox("Sweating")
+        symptoms_tensemuscles = st.checkbox("Tense Muscles")
+        symptoms_tinglyhands = st.checkbox("Tingly Hands")
+        symptoms_trembling = st.checkbox("Trembling")
+        symptoms_tremor = st.checkbox("Tremor")
+        symptoms_weakness = st.checkbox("Weakness")
+    
+    # Gather selected symptoms
+    symptoms = []
+    if symptoms_anxiety: symptoms.append("Anxiety")
+    if symptoms_chestpain: symptoms.append("Chest Pain")
+    if symptoms_chills: symptoms.append("Chills")
+    if symptoms_chocking: symptoms.append("Chocking")
+    if symptoms_cold: symptoms.append("Cold")
+    if symptoms_coldhands: symptoms.append("Cold Hands")
+    if symptoms_dizziness: symptoms.append("Dizziness")
+    if symptoms_feelingdanger: symptoms.append("Feeling of danger")
+    if symptoms_feelingdread: symptoms.append("Feeling of dread")
+    if symptoms_heartracing: symptoms.append("Heart racing")
+    if symptoms_hotflushes: symptoms.append("Hot flushes")
+    if symptoms_irrationalthinking: symptoms.append("Irrational thinking")
+    if symptoms_nausea: symptoms.append("Nausea")
+    if symptoms_nervous: symptoms.append("Nervousness")
+    if symptoms_numbhands: symptoms.append("Numb Hands")
+    if symptoms_numbness: symptoms.append("Numbness")
+    if symptoms_palpitations: symptoms.append("Palpitations")
+    if symptoms_shortbreath: symptoms.append("Shortness of Breath")
+    if symptoms_sweating: symptoms.append("Sweating")
+    if symptoms_tensemuscles: symptoms.append("Tense Muscles")
+    if symptoms_tinglyhands: symptoms.append("Tingly Hands")
+    if symptoms_trembling: symptoms.append("Trembling")
+    if symptoms_tremor: symptoms.append("Tremor")
+    if symptoms_weakness: symptoms.append("Weakness")
+    
+    new_symptom = st.text_input("Add new symptom:")
+    if st.button("Add Symptom") and new_symptom:
+        symptoms.append(new_symptom)
 
     # Question 4: Triggers
     st.subheader("Triggers:")
-    triggers = st.text_area("List your triggers separated by commas")
+        triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
+    
+    new_trigger = st.text_input("Add new trigger:")
+    if st.button("Add Trigger") and new_trigger:
+        triggers.append(new_trigger)
+
 
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
