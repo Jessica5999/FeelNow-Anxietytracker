@@ -20,8 +20,7 @@ def anxiety_attack_protocol():
         st.session_state.button_count = 0
         st.session_state.times = []
         st.session_state.severities = []
-        st.session_state.symptoms = []
-        st.session_state.triggers = []
+       
 
     st.write("Anxiety Attack Protocol")
 
