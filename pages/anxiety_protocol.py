@@ -1,33 +1,33 @@
 import streamlit as st
-import pandas as pd
 import datetime
-
-# Konstanten
-DATA_FILE = "anxiety_data.csv"
 
 def show():
     st.title("Anxiety Protocol")
 
 def anxiety_protocol():
-    if 'data' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE):
-            st.session_state.data = st.session_state.github.read_df(DATA_FILE)
-        else:
-            st.session_state.data = pd.DataFrame(columns=['Date', 'Location', 'Anxiety Description', 'Cause', 'Triggers', 'Symptoms', 'Help Response'])
+    # Check if the session state object exists, if not, initialize it
+    if 'button_count' not in st.session_state:
+        st.session_state.button_count = 0
+        st.session_state.times = []
+        st.session_state.severities = []
 
     st.write("Anxiety Protocol Page")
 
     # Question 1: Date
     date_selected = st.date_input("Date", value=datetime.date.today())
 
-    # Question 2: Where are you and what is the environment?
-    location = st.text_area("Where are you and what is the environment?", key="location", height=100)
-
-    anxiety_description = st.text_area("Try to describe your anxiety right now?", key="anxiety_description", height=100)
-
-    cause = st.text_area("What do you think could be the cause?", key="cause", height=100)
+    # Question 2: Where are you
+    st.subheader("Where are you and what is the environment?")
+    help_response = st.text_area("Write your response here", key="location", height=100)
     
-    triggers = st.text_area("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event", key="triggers", height=100)
+    st.subheader("Try to describe your anxiety right now?")
+    help_response = st.text_area("Write your response here", key="anxiety_description", height=100)
+
+    st.subheader("What do you think could be the cause?")
+    help_response = st.text_area("Write your response here", key="cause", height=100)
+    
+    st.subheader("Any specific triggers? For example Stress, Caffeine, Lack of Sleep, Social Event, Reminder of traumatic event")
+    help_response = st.text_area("Write your response here", key="triggers", height=100)
 
     # Question 3: Symptoms
     st.subheader("Symptoms:")
@@ -53,39 +53,20 @@ def anxiety_protocol():
         symptoms_trembling = st.checkbox("Trembling")
         symptoms_tremor = st.checkbox("Tremor")
         symptoms_weakness = st.checkbox("Weakness")
-    
-    symptoms_list = [symptoms_chestpain, symptoms_chills, symptoms_cold, symptoms_coldhands, symptoms_dizziness, symptoms_feelingdanger, 
-                     symptoms_heartracing, symptoms_hotflushes, symptoms_nausea, symptoms_nervous, symptoms_numbhands, symptoms_numbness, 
-                     symptoms_shortbreath, symptoms_sweating, symptoms_tensemuscles, symptoms_tinglyhands, symptoms_trembling, symptoms_tremor, 
-                     symptoms_weakness]
-    
-    symptoms = [symptom for i, symptom in enumerate(["Chest Pain", "Chills", "Cold", "Cold Hands", "Dizziness", "Feeling of danger", 
-                                                      "Heart racing", "Hot flushes", "Nausea", "Nervousness", "Numb Hands", "Numbness", 
-                                                      "Shortness of Breath", "Sweating", "Tense Muscles", "Tingly Hands", "Trembling", 
-                                                      "Tremor", "Weakness"]) if symptoms_list[i]]
-    
-    symptoms_text = ', '.join(symptoms)
+    if 'symptoms' not in st.session_state:
+        st.session_state.symptoms = []
+
+    # Display existing symptoms
+    for symptom in st.session_state.symptoms:
+        st.write(symptom)
+
+    new_symptom = st.text_input("Add new symptom:", key="new_symptom")
+    if st.button("Add Symptom") and new_symptom:
+        st.session_state.symptoms.append(new_symptom)
 
     # Question 5: Did something Help against the attack?
-    help_response = st.text_area("Did something Help against the Anxiety?", key="help_response", height=100)
-
-    if st.button("Save Entry"):
-        new_entry = {
-            'Date': date_selected,
-            'Location': location,
-            'Anxiety Description': anxiety_description,
-            'Cause': cause,
-            'Triggers': triggers,
-            'Symptoms': symptoms_text,
-            'Help Response': help_response
-        }
-        st.session_state.data = st.session_state.data.append(new_entry, ignore_index=True)
-        st.session_state.github.write_df(DATA_FILE, st.session_state.data, "added new entry")
-        st.success("Entry saved successfully!")
-
-    # Display saved entries
-    st.subheader("Saved Entries")
-    st.write(st.session_state.data)
+    st.subheader("Did something Help against the Anxiety?")
+    help_response = st.text_area("Write your response here", key="help_response", height=100)
 
 def main_page():
     st.title("FeelNow")
@@ -93,4 +74,3 @@ def main_page():
 
 if __name__ == "__main__":
     main_page()
-
