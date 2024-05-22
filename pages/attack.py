@@ -31,4 +31,4 @@ def No_2_question():
     st.experimental_rerun()
 
 if __name__ == "__main__":
-    show()
+    main()
