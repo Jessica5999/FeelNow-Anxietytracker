@@ -92,7 +92,6 @@ def anxiety_protocol():
     st.subheader("Did something Help against the Anxiety?")
     help_response = st.text_area("Write your response here", key="help_response", height=100)
 
-    # Save the data to CSV when the form is submitted
     if st.button("Save Data"):
         data = [
             date_selected,
