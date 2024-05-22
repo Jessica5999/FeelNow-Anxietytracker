@@ -67,8 +67,7 @@ def authenticate(username, password):
             st.session_state['authentication'] = True
             st.session_state['username'] = username
             st.success('Login successful')
-            st
-.experimental_rerun()
+            st.experimental_rerun()
         else:
             st.error('Incorrect password')
     else:
