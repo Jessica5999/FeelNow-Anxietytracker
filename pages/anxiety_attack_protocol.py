@@ -8,6 +8,9 @@ def save_to_csv(data, filename='anxiety_data.csv'):
         writer = csv.writer(file)
         writer.writerow(data)
 
+# neuer Dateiname daten/<name>.csv 
+# speichern mit github methode (st.session_state.github.write_df)
+
 def read_csv(filename='anxiety_data.csv'):
     if os.path.exists(filename):
         with open(filename, mode='r') as file:
