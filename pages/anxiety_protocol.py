@@ -200,11 +200,6 @@ def main():
             register_page()
     else:
         st.sidebar.write(f"Logged in as {st.session_state['username']}")
-       page = st.sidebar.write("Anxiety Protocol")
-
-
-        if page == "Anxiety Protocol":
-            main_page()
 
         logout_button = st.button("Logout")
         if logout_button:
