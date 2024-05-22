@@ -91,16 +91,6 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-
-def anxiety_attack_protocol():
-    # Check if the session state object exists, if not, initialize it
-    if 'button_count' not in st.session_state:
-        st.session_state.button_count = 0
-        st.session_state.times = []
-        st.session_state.severities = []
-        st.session_state.symptoms = []
-        st.session_state.triggers = []
-
     
     st.write("Anxiety Attack Protocol")
 
