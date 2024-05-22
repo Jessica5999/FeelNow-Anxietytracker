@@ -1,9 +1,5 @@
 import streamlit as st
 from github_contents import GithubContents
-from pages import Login
-from pages import Attack 
-from pages import Anxiety_Attack_Protocol
-from pages import Anxiety_protocol
 
 github = GithubContents(
     st.secrets["github"]["owner"],
