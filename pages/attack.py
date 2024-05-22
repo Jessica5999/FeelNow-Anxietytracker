@@ -4,7 +4,6 @@ import time
 import sys
 import os
 
-# Adding the parent directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main_attack():
@@ -43,4 +42,4 @@ def switch_pages(page_name):
     st.experimental_rerun()
 
 if __name__ == "__main__":
-    main_attack() 
+    show() 
