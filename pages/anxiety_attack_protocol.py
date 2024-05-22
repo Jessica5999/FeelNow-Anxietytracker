@@ -16,7 +16,7 @@ def Login():
     st.image("Logo.jpeg", width=600)
 
 def login_page():
-    """ Login an existing user. """
+    """Login an existing user."""
     st.title("Login")
     with st.form(key='login_form'):
         username = st.text_input("Username")
@@ -25,7 +25,7 @@ def login_page():
             authenticate(username, password)
 
 def register_page():
-    """ Register a new user. """
+    """Register a new user."""
     st.title("Register")
     with st.form(key='register_form'):
         new_username = st.text_input("New Username")
@@ -90,28 +90,18 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-def main():
-    init_github()
-    init_credentials()
-
-    if 'authentication' not in st.session_state:
-        st.session_state['authentication'] = False
-
-    if not st.session_state['authentication']:
-        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
-        if options == "Login":
-            login_page()
-        elif options == "Register":
-            register_page()
-    else:
-        st.sidebar.write(f"Logged in as {st.session_state['username']}")
-        anxiety_attack_protocol()
-
-        logout_button = st.button("Logout")
-        if logout_button:
-            st.session_state['authentication'] = False
-            st.session_state.pop('username', None)
-            st.experimental_rerun()
+def add_time_severity():
+    st.subheader("Time & Severity:")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
+    with col2:
+        severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
+    
+    # Store these values in the session state so they can be accessed later
+    st.session_state.time_selected = time_selected
+    st.session_state.severity = severity
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -125,7 +115,7 @@ def anxiety_attack_protocol():
 
     st.title("Anxiety Attack Protocol")
 
-     # Question 1: Date
+    # Question 1: Date
     date_selected = st.date_input("Date", value=datetime.date.today())
 
     # Question 2: Time & Severity
@@ -213,7 +203,28 @@ def anxiety_attack_protocol():
     st.subheader("Saved Entries")
     st.write(st.session_state.data)
 
+def main():
+    init_github()
+    init_credentials()
+
+    if 'authentication' not in st.session_state:
+        st.session_state['authentication'] = False
+
+    if not st.session_state['authentication']:
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
+        if options == "Login":
+            login_page()
+        elif options == "Register":
+            register_page()
+    else:
+        st.sidebar.write(f"Logged in as {st.session_state['username']}")
+        anxiety_attack_protocol()
+
+        logout_button = st.button("Logout")
+        if logout_button:
+            st.session_state['authentication'] = False
+            st.session_state.pop('username', None)
+            st.experimental_rerun()
+
 if __name__ == "__main__":
     main()
-
-
