@@ -101,7 +101,7 @@ def anxiety_attack_protocol():
         st.session_state.symptoms = []
         st.session_state.triggers = []
 
-    def add_time_severity():
+def add_time_severity():
     st.subheader("Time & Severity")
     
     if 'times' not in st.session_state:
