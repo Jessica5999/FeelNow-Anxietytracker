@@ -15,9 +15,6 @@ ANXIETY_PROTOCOL_FILE = "anxiety_protocol_data.csv"
 def show():
     st.title("Login/Register")
 
-def Login():
-    st.image("Logo.jpeg", width=600)
-
 def login_page():
     """ Login an existing user. """
     st.title("Login")
@@ -120,17 +117,25 @@ def save_to_csv(data, filename=ANXIETY_PROTOCOL_FILE):
     header = ['Username', 'Date', 'Location', 'Anxiety Description', 'Cause', 'Triggers', 'Symptoms', 'Help Response']
     file_exists = os.path.exists(filename)
 
-    with open(filename, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(header)
-        writer.writerow(data)
+    try:
+        with open(filename, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow(header)
+            writer.writerow(data)
+        st.info(f"Data saved to {filename}")
+    except Exception as e:
+        st.error(f"Error saving data: {e}")
 
 def read_csv(filename=ANXIETY_PROTOCOL_FILE):
     if os.path.exists(filename):
-        with open(filename, mode='r') as file:
-            reader = csv.reader(file)
-            return list(reader)
+        try:
+            with open(filename, mode='r') as file:
+                reader = csv.reader(file)
+                return list(reader)
+        except Exception as e:
+            st.error(f"Error reading data: {e}")
+            return []
     return []
 
 def anxiety_protocol():
