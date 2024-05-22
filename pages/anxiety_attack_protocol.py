@@ -100,7 +100,7 @@ def add_time_severity():
         swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
         new_entry = {
             'time': swiss_time,
-            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity) 
+            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity)} 
 
         # Update time and severity in session state
         if len(st.session_state.times) <= i:
