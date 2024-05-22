@@ -67,7 +67,8 @@ def authenticate(username, password):
             st.session_state['authentication'] = True
             st.session_state['username'] = username
             st.success('Login successful')
-            st.experimental_rerun()
+            st
+.experimental_rerun()
         else:
             st.error('Incorrect password')
     else:
@@ -132,6 +133,7 @@ def anxiety_attack_protocol():
     time_selected = st.time_input("Time", value=datetime.datetime.now().time())
     severity = st.slider("Severity (1-10)", min_value=1, max_value=10, value=1)
 
+    # Question 3: Symptoms
     # Question 3: Symptoms
     st.subheader("Symptoms:")
     col1, col2 = st.columns(2)
@@ -205,17 +207,14 @@ def anxiety_attack_protocol():
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
-
-    if st.button("Save Entry"):
-        new_entry = {
-            'Date': date_selected,
-            'Time': time_selected,
-            'Severity': severity,
-            'Symptoms': symptoms,
-            'Triggers': triggers,
-            'Help': help_response
-        }
-        st.session_state.data = st.session_state.data.append(new_entry, ignore_index=True)
+        
+        # Create a DataFrame from the new entry
+        new_entry_df = pd.DataFrame([new_entry])
+        
+        # Append the new entry to the existing data DataFrame
+        st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
+        
+        # Save the updated DataFrame to the user's specific CSV file on GitHub
         st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
         st.success("Entry saved successfully!")
 
@@ -225,5 +224,4 @@ def anxiety_attack_protocol():
 
 if __name__ == "__main__":
     main()
-
 
