@@ -181,6 +181,40 @@ def anxiety_attack_protocol():
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
 
+    def add_time_severity():
+    st.subheader("Time & Severity")
+    
+    # Initialize times list if not already initialized
+    if 'times' not in st.session_state:
+        st.session_state.times = []
+
+    for i in range(st.session_state.button_count + 1):
+        if i < len(st.session_state.times):
+            time_selected, severity = st.session_state.times[i]
+        else:
+            time_selected = datetime.datetime.now().time()
+            severity = 1
+
+        # Convert time_selected to string with minute precision
+        time_selected_str = time_selected.strftime('%H:%M')
+        
+        # Display time input with minute precision
+        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str)
+        
+        # Convert the string back to datetime.time object
+        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
+        
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
+        
+        # Update time and severity in session state
+        if len(st.session_state.times) <= i:
+            st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
+
+    if st.button("Add Time & Severity"):
+        st.session_state.button_count += 1
+
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
