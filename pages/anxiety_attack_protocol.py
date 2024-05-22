@@ -3,20 +3,8 @@ import datetime
 import csv
 import os
 
-def save_to_csv(data, filename='anxiety_data.csv'):
-    with open(filename, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(data)
-
-# neuer Dateiname daten/<name>.csv 
-# speichern mit github methode (st.session_state.github.write_df)
-
-def read_csv(filename='anxiety_data.csv'):
-    if os.path.exists(filename):
-        with open(filename, mode='r') as file:
-            reader = csv.reader(file)
-            return list(reader)
-    return []
+def show():
+    st.title("Anxiety Attack Protocol")
 
 def anxiety_attack_protocol():
     # Check if the session state object exists, if not, initialize it
@@ -24,6 +12,8 @@ def anxiety_attack_protocol():
         st.session_state.button_count = 0
         st.session_state.times = []
         st.session_state.severities = []
+        st.session_state.symptoms = []
+        st.session_state.triggers = []
 
     st.write("Anxiety Attack Protocol")
 
@@ -62,70 +52,41 @@ def anxiety_attack_protocol():
         symptoms_trembling = st.checkbox("Trembling")
         symptoms_tremor = st.checkbox("Tremor")
         symptoms_weakness = st.checkbox("Weakness")
-    
-    # Gather selected symptoms
-    symptoms = []
-    if symptoms_anxiety: symptoms.append("Anxiety")
-    if symptoms_chestpain: symptoms.append("Chest Pain")
-    if symptoms_chills: symptoms.append("Chills")
-    if symptoms_chocking: symptoms.append("Chocking")
-    if symptoms_cold: symptoms.append("Cold")
-    if symptoms_coldhands: symptoms.append("Cold Hands")
-    if symptoms_dizziness: symptoms.append("Dizziness")
-    if symptoms_feelingdanger: symptoms.append("Feeling of danger")
-    if symptoms_feelingdread: symptoms.append("Feeling of dread")
-    if symptoms_heartracing: symptoms.append("Heart racing")
-    if symptoms_hotflushes: symptoms.append("Hot flushes")
-    if symptoms_irrationalthinking: symptoms.append("Irrational thinking")
-    if symptoms_nausea: symptoms.append("Nausea")
-    if symptoms_nervous: symptoms.append("Nervousness")
-    if symptoms_numbhands: symptoms.append("Numb Hands")
-    if symptoms_numbness: symptoms.append("Numbness")
-    if symptoms_palpitations: symptoms.append("Palpitations")
-    if symptoms_shortbreath: symptoms.append("Shortness of Breath")
-    if symptoms_sweating: symptoms.append("Sweating")
-    if symptoms_tensemuscles: symptoms.append("Tense Muscles")
-    if symptoms_tinglyhands: symptoms.append("Tingly Hands")
-    if symptoms_trembling: symptoms.append("Trembling")
-    if symptoms_tremor: symptoms.append("Tremor")
-    if symptoms_weakness: symptoms.append("Weakness")
-    
+
+    # Add custom symptom
     new_symptom = st.text_input("Add new symptom:")
     if st.button("Add Symptom") and new_symptom:
-        symptoms.append(new_symptom)
+        st.session_state.symptoms.append(new_symptom)
+
+    # Display existing symptoms
+    for symptom in st.session_state.symptoms:
+        st.write(symptom)
 
     # Question 4: Triggers
     st.subheader("Triggers:")
     triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
-    
+
+    # Add custom trigger
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
-        triggers.append(new_trigger)
+        st.session_state.triggers.append(new_trigger)
+
+    # Display existing triggers
+    for trigger in st.session_state.triggers:
+        st.write(trigger)
 
     # Question 5: Did something Help against the attack?
-    st.subheader("Did something Help against the attack?")
+    st.subheader("Did something help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
-    
-    # Save the data to CSV when the form is submitted
-    if st.button("Save Data"):
-        time_severity_pairs = st.session_state.times
-        data = [
-            date_selected,
-            "; ".join([f"{time.strftime('%H:%M')} - {severity}" for time, severity in time_severity_pairs]),
-            ", ".join(symptoms),
-            ", ".join(triggers),
-            help_response
-        ]
-        save_to_csv(data)
+
+    # Save to CSV
+    if st.button("Save"):
+        save_to_csv(date_selected, st.session_state.times, st.session_state.symptoms, triggers + st.session_state.triggers, help_response)
         st.success("Data saved successfully!")
 
 def add_time_severity():
     st.subheader("Time & Severity")
     
-    # Initialize times list if not already initialized
-    if 'times' not in st.session_state:
-        st.session_state.times = []
-
     for i in range(st.session_state.button_count + 1):
         if i < len(st.session_state.times):
             time_selected, severity = st.session_state.times[i]
@@ -137,12 +98,12 @@ def add_time_severity():
         time_selected_str = time_selected.strftime('%H:%M')
         
         # Display time input with minute precision
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str, key=f"time_{i}")
+        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str)
         
         # Convert the string back to datetime.time object
         time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
         
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_{i}")
+        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
         
         # Update time and severity in session state
         if len(st.session_state.times) <= i:
@@ -153,18 +114,22 @@ def add_time_severity():
     if st.button("Add Time & Severity"):
         st.session_state.button_count += 1
 
+def save_to_csv(date, times, symptoms, triggers, help_response):
+    file_exists = os.path.isfile('anxiety_protocol.csv')
+    
+    with open('anxiety_protocol.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            # Write the header
+            writer.writerow(["Date", "Time", "Severity", "Symptoms", "Triggers", "Help Response"])
+
+        # Write the data
+        for time, severity in times:
+            writer.writerow([date, time.strftime('%H:%M'), severity, ','.join(symptoms), ','.join(triggers), help_response])
+
 def main_page():
     st.title("FeelNow")
     anxiety_attack_protocol()
-
-    # Display saved data
-    st.header("Saved Data")
-    data = read_csv()
-    if data:
-        st.write("## Anxiety Attack Protocol Data")
-        st.table(data)
-    else:
-        st.write("No data available")
 
 if __name__ == "__main__":
     main_page()
