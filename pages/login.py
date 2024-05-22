@@ -90,8 +90,8 @@ def init_credentials():
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
 def main():
-    init_github()  # Initialize the GithubContents object
-    init_credentials()  # Loads the credentials from the Github data repository
+    init_github()
+    init_credentials()
 
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
