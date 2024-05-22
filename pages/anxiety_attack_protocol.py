@@ -213,4 +213,7 @@ def anxiety_attack_protocol():
     st.subheader("Saved Entries")
     st.write(st.session_state.data)
 
+if __name__ == "__main__":
+    main()
+
 
