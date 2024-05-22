@@ -4,6 +4,7 @@ import pandas as pd
 import bcrypt
 from github_contents import GithubContents
 import datetime
+import pytz  # For timezone handling
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -91,30 +92,10 @@ def init_credentials():
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
 def add_time_severity():
-    st.subheader("Time & Severity")
-    
-    if 'times' not in st.session_state:
-        st.session_state.times = []
+    if 'time_severity_entries' not in st.session_state:
+        st.session_state.time_severity_entries = []
 
-    for i in range(st.session_state.button_count + 1):
-        if i < len(st.session_state.times):
-            time_selected, severity = st.session_state.times[i]
-        else:
-            time_selected = datetime.datetime.now().time()
-            severity = 1
-
-        time_selected_str = time_selected.strftime('%H:%M')
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str, key=f"time_input_{i}")
-        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
-        
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
-        
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
-
- # Button to add a new time-severity entry
+    # Button to add a new time-severity entry
     if st.button("Add Severity"):
         swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
         new_entry = {
@@ -123,7 +104,9 @@ def add_time_severity():
         }
         st.session_state.time_severity_entries.append(new_entry)
 
-
+    # Display all time-severity entries
+    for entry in st.session_state.time_severity_entries:
+        st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -204,8 +187,8 @@ def anxiety_attack_protocol():
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': st.session_state.time_selected,
-            'Severity': st.session_state.severity,
+            'Time': [entry['time'] for entry in st.session_state.time_severity_entries],
+            'Severity': [entry['severity'] for entry in st.session_state.time_severity_entries],
             'Symptoms': st.session_state.symptoms,
             'Triggers': triggers,
             'Help': help_response
@@ -250,4 +233,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
