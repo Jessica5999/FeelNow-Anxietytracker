@@ -125,15 +125,12 @@ def anxiety_attack_protocol():
 
     st.title("Anxiety Attack Protocol")
 
-    # Question 1: Date
+     # Question 1: Date
     date_selected = st.date_input("Date", value=datetime.date.today())
 
     # Question 2: Time & Severity
-    time_selected = st.time_input("Time", value=datetime.datetime.now().time())
-    severity = st.slider("Severity (1-10)", min_value=1, max_value=10, value=1)  
-    
+    add_time_severity()
 
-    # Question 3: Symptoms
     # Question 3: Symptoms
     st.subheader("Symptoms:")
     col1, col2 = st.columns(2)
@@ -164,36 +161,15 @@ def anxiety_attack_protocol():
         symptoms_tremor = st.checkbox("Tremor")
         symptoms_weakness = st.checkbox("Weakness")
     
-    # Gather selected symptoms
-    symptoms = []
-    if symptoms_anxiety: symptoms.append("Anxiety")
-    if symptoms_chestpain: symptoms.append("Chest Pain")
-    if symptoms_chills: symptoms.append("Chills")
-    if symptoms_chocking: symptoms.append("Chocking")
-    if symptoms_cold: symptoms.append("Cold")
-    if symptoms_coldhands: symptoms.append("Cold Hands")
-    if symptoms_dizziness: symptoms.append("Dizziness")
-    if symptoms_feelingdanger: symptoms.append("Feeling of danger")
-    if symptoms_feelingdread: symptoms.append("Feeling of dread")
-    if symptoms_heartracing: symptoms.append("Heart racing")
-    if symptoms_hotflushes: symptoms.append("Hot flushes")
-    if symptoms_irrationalthinking: symptoms.append("Irrational thinking")
-    if symptoms_nausea: symptoms.append("Nausea")
-    if symptoms_nervous: symptoms.append("Nervousness")
-    if symptoms_numbhands: symptoms.append("Numb Hands")
-    if symptoms_numbness: symptoms.append("Numbness")
-    if symptoms_palpitations: symptoms.append("Palpitations")
-    if symptoms_shortbreath: symptoms.append("Shortness of Breath")
-    if symptoms_sweating: symptoms.append("Sweating")
-    if symptoms_tensemuscles: symptoms.append("Tense Muscles")
-    if symptoms_tinglyhands: symptoms.append("Tingly Hands")
-    if symptoms_trembling: symptoms.append("Trembling")
-    if symptoms_tremor: symptoms.append("Tremor")
-    if symptoms_weakness: symptoms.append("Weakness")
-    
+    if 'symptoms' not in st.session_state:
+        st.session_state.symptoms = []
+
     new_symptom = st.text_input("Add new symptom:")
     if st.button("Add Symptom") and new_symptom:
-        symptoms.append(new_symptom)
+        st.session_state.symptoms.append(new_symptom)
+
+    for symptom in st.session_state.symptoms:
+        st.write(symptom)
 
     # Question 4: Triggers
     st.subheader("Triggers:")
@@ -201,8 +177,10 @@ def anxiety_attack_protocol():
     
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
-        triggers.append(new_trigger)
+        st.session_state.triggers.append(new_trigger)
 
+    for trigger in st.session_state.triggers:
+        st.write(trigger)
 
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
