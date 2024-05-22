@@ -91,22 +91,6 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-def add_time_severity():
-    if 'time_severity_entries' not in st.session_state:
-        st.session_state.time_severity_entries = []
-
-    # Button to add a new time-severity entry
-    if st.button("Add Severity"):
-        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
-        new_entry = {
-            'time': swiss_time,
-            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
-        }
-        st.session_state.time_severity_entries.append(new_entry)
-
-    # Display all time-severity entries
-    for entry in st.session_state.time_severity_entries:
-        st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
