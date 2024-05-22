@@ -91,11 +91,11 @@ def anxiety_protocol():
     username = st.session_state['username']
     data_file = f"{username}_anxiety_protocol_data.csv"
     
-    if 'data' not in st.session_state:
+    if 'anxiety_data' not in st.session_state:
         if st.session_state.github.file_exists(data_file):
-            st.session_state.data = st.session_state.github.read_df(data_file)
+            st.session_state.anxiety_data = st.session_state.github.read_df(data_file)
         else:
-            st.session_state.data = pd.DataFrame(columns=['Date', 'Location', 'Anxiety Description', 'Cause', 'Triggers', 'Symptoms', 'Help'])
+            st.session_state.anxiety_data = pd.DataFrame(columns=['Date', 'Location', 'Anxiety Description', 'Cause', 'Triggers', 'Symptoms', 'Help'])
 
     st.title("Anxiety Protocol")
 
@@ -171,15 +171,15 @@ def anxiety_protocol():
         new_entry_df = pd.DataFrame([new_entry])
         
         # Append the new entry to the existing data DataFrame
-        st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
+        st.session_state.anxiety_data = pd.concat([st.session_state.anxiety_data, new_entry_df], ignore_index=True)
         
         # Save the updated DataFrame to the user's specific CSV file on GitHub
-        st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
+        st.session_state.github.write_df(data_file, st.session_state.anxiety_data, "added new entry")
         st.success("Entry saved successfully!")
 
     # Display saved entries
     st.subheader("Saved Entries")
-    st.write(st.session_state.data)
+    st.write(st.session_state.anxiety_data)
 
 def main_page():
     st.title("FeelNow")
@@ -208,9 +208,9 @@ def main():
         logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
-            st.session_state.pop('username', None)
             st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
+
 
