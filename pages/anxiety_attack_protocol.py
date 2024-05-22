@@ -165,8 +165,8 @@ def anxiety_attack_protocol():
     st.subheader("Did something Help against the attack?")
     help_response = st.text_area("Write your response here", height=100)
 
-    def add_time_severity():
-    st.subheader("Time & Severity")
+def add_time_severity():
+st.subheader("Time & Severity")
     
     # Initialize times list if not already initialized
     if 'times' not in st.session_state:
