@@ -1,6 +1,7 @@
 import streamlit as st
 import datetime
 import csv
+import os
 
 def save_to_csv(data, filename='anxiety_data.csv'):
     with open(filename, mode='a', newline='') as file:
@@ -20,7 +21,6 @@ def anxiety_attack_protocol():
         st.session_state.button_count = 0
         st.session_state.times = []
         st.session_state.severities = []
-       
 
     st.write("Anxiety Attack Protocol")
 
@@ -89,10 +89,7 @@ def anxiety_attack_protocol():
     
     new_symptom = st.text_input("Add new symptom:")
     if st.button("Add Symptom") and new_symptom:
-        st.session_state.symptoms.append(new_symptom)
-
-    for symptom in st.session_state.symptoms:
-        st.write(symptom)
+        symptoms.append(new_symptom)
 
     # Question 4: Triggers
     st.subheader("Triggers:")
@@ -100,8 +97,7 @@ def anxiety_attack_protocol():
     
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
-        st.session_state.triggers.append(new_trigger)
-        
+        triggers.append(new_trigger)
 
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
@@ -148,6 +144,8 @@ def add_time_severity():
         # Update time and severity in session state
         if len(st.session_state.times) <= i:
             st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
 
     if st.button("Add Time & Severity"):
         st.session_state.button_count += 1
