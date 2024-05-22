@@ -103,13 +103,13 @@ def main():
         elif options == "Register":
             register_page()
     else:
-        st.switch_pages("pages/attack.py")
+        st.switch_page("pages/attack.py")
         logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
             st.experimental_rerun()
 
-def switch_pages(page_name):
+def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
 
 if __name__ == "__main__":
