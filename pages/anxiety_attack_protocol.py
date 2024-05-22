@@ -96,7 +96,7 @@ def add_time_severity():
         st.session_state.time_severity_entries = []
 
     # Button to add a new time-severity entry
-    if st.button("Add Severity"):
+    if st.button("Add Time & Severity"):
         swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
         new_entry = {
             'time': swiss_time,
