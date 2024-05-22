@@ -114,8 +114,15 @@ def add_time_severity():
         else:
             st.session_state.times[i] = (time_selected, severity)
 
-    if st.button("Add Time & Severity"):
-        st.session_state.button_count += 1¨
+ # Button to add a new time-severity entry
+    if st.button("Add Severity"):
+        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+        new_entry = {
+            'time': swiss_time,
+            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
+        }
+        st.session_state.time_severity_entries.append(new_entry)
+
 
 
 def anxiety_attack_protocol():
