@@ -195,7 +195,7 @@ def anxiety_attack_protocol():
 
     # Question 4: Triggers
     st.subheader("Triggers:")
-        triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
+    triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
     
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
