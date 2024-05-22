@@ -16,7 +16,6 @@ def read_csv(filename='anxiety_protocol_data.csv'):
     return []
 
 def anxiety_protocol():
-    # Check if the session state object exists, if not, initialize it
     if 'button_count' not in st.session_state:
         st.session_state.button_count = 0
         st.session_state.symptoms = []
