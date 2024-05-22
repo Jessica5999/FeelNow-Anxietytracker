@@ -101,9 +101,7 @@ def anxiety_attack_protocol():
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
         st.session_state.triggers.append(new_trigger)
-
-    for trigger in st.session_state.triggers:
-        st.write(trigger)
+        
 
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
