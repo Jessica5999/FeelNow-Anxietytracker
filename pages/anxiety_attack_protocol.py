@@ -96,7 +96,7 @@ def add_time_severity():
    
     
     with col1:
-        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time()(pytz.timezone('Europe/Zurich')))
+        time_selected = st.time_input("Time of Attack", value=datetime.datetime.now().time())
     with col2:
         severity = st.slider("Severity (1-10)", min_value=1, max_value=10)
     
