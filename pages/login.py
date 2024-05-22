@@ -103,7 +103,6 @@ def main():
         elif options == "Register":
             register_page()
     else:
-        st.success(f"Hurray {st.session_state['username']}!! You are logged in.", icon="🤩")
         st.switch_pages("pages/attack.py")
         logout_button = st.button("Logout")
         if logout_button:
