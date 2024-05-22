@@ -91,38 +91,28 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-    st.subheader("Time & Severity")
-    
-    # Initialize times list if not already initialized
-    if 'times' not in st.session_state:
-        st.session_state.times = []
+def add_time_severity():
+    if 'time_severity_entries' not in st.session_state:
+        st.session_state.time_severity_entries = []
 
-    for i in range(st.session_state.button_count + 1):
-        if i < len(st.session_state.times):
-            time_selected, severity = st.session_state.times[i]
-        else:
-            time_selected = datetime.datetime.now().time()
-            severity = 1
+    # Button to add a new time-severity entry
+    if st.button("Add Severity"):
+        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+        new_entry = {
+            'time': swiss_time,
+            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
+        }
+        st.session_state.time_severity_entries.append(new_entry)
 
-        # Convert time_selected to string with minute precision
-        time_selected_str = time_selected.strftime('%H:%M')
-        
-        # Display time input with minute precision
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected_str)
-        
-        # Convert the string back to datetime.time object
+            # Convert the string back to datetime.time object
         time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
         
         severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity)
-        
-        # Update time and severity in session state
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
 
-    if st.button("Add Time & Severity"):
-        st.session_state.button_count += 1
+
+    # Display all time-severity entries
+    for entry in st.session_state.time_severity_entries:
+        st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -249,3 +239,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
