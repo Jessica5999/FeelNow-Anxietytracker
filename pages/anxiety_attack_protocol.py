@@ -100,11 +100,16 @@ def add_time_severity():
         swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
         new_entry = {
             'time': swiss_time,
-            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity) (key=f"severity_{len(st.session_state.time_severity_entries)}")
-        }
-        st.session_state.time_severity_entries.append(new_entry)
-        
+            'severity': st.slider(f"Severity (1-10){i+1}", min_value=1, max_value=10, value=severity) 
 
+        # Update time and severity in session state
+        if len(st.session_state.times) <= i:
+            st.session_state.times.append((time_selected, severity))
+        else:
+            st.session_state.times[i] = (time_selected, severity)
+
+    if st.button("Add Time & Severity"):
+        st.session_state.button_count += 1
 
     # Display all time-severity entries
     for entry in st.session_state.time_severity_entries:
