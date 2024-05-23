@@ -22,7 +22,8 @@ def main():
         from pages import anxiety_attack_protocol as attack_protocol
         
     else:
-        show_main_page()
+        page == "attack":
+        from pages import attack
 
 def show_main_page():
     st.image("Logo.jpeg", width=600)
