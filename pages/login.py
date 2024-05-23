@@ -109,8 +109,10 @@ def main():
             st.experimental_rerun()
 
 def switch_page(page_name):
-    st.success("Redirecting to {} page...".format(page_name))
-    time.sleep(2)
+    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
+    time.sleep(3)
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
