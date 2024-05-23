@@ -33,7 +33,7 @@ def show_main_page():
             st.write("Reassess your feelings")
             
 # Hauptfunktion zur Steuerung der Navigation
-def main():
+def main_page():
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
 
