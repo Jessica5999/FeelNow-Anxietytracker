@@ -35,12 +35,12 @@ def show_main_page():
 # Hauptfunktion zur Steuerung der Navigation
 def main_page():
     query_params = st.experimental_get_query_params()
-    page = query_params.get("page", ["main_page"])[0]
+    page = query_params.get("page", ["main"])[0]
 
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
         anxiety_protocol.show()
-    elif page == "attack":
+    elif page == "anxiety_attack_protocol":
         from pages import anxiety_attack_protocol
         anxiety_attack_protocol.show()
     else:
