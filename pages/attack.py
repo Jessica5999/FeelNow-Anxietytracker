@@ -114,4 +114,4 @@ def init_github():
         print("github initialized")
 
 if __name__ == "__main__":
-    main()
+    show_main_page()
