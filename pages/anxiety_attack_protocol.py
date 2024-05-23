@@ -97,17 +97,20 @@ def add_time_severity():
 
     st.subheader("Record Severity Over Time")
 
+    # Display the current time
+    current_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+    st.write(f"Current Time: {current_time}")
+
     # Button to add a new time-severity entry
     with st.form(key='severity_form'):
         severity = st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_slider")
         if st.form_submit_button("Add Severity"):
-            swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
             new_entry = {
-                'time': swiss_time,
+                'time': current_time,
                 'severity': severity
             }
             st.session_state.time_severity_entries.append(new_entry)
-            st.success(f"Added entry: Time: {swiss_time}, Severity: {severity}")
+            st.success(f"Added entry: Time: {current_time}, Severity: {severity}")
 
     # Display all time-severity entries
     for entry in st.session_state.time_severity_entries:
@@ -208,6 +211,9 @@ def anxiety_attack_protocol():
         # Save the updated DataFrame to the user's specific CSV file on GitHub
         st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
         st.success("Entry saved successfully!")
+
+        # Clear the severity entries after saving
+        st.session_state.time_severity_entries = []
 
     # Display saved entries
     st.subheader("Saved Entries")
