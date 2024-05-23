@@ -128,9 +128,9 @@ def anxiety_protocol():
         if st.checkbox("Feeling of danger"): symptoms_list.append("Feeling of danger")
         if st.checkbox("Heart racing"): symptoms_list.append("Heart racing")
         if st.checkbox("Hot flushes"): symptoms_list.append("Hot flushes")
-    with col2:
         if st.checkbox("Nausea"): symptoms_list.append("Nausea")
         if st.checkbox("Nervousness"): symptoms_list.append("Nervousness")
+    with col2:
         if st.checkbox("Numb Hands"): symptoms_list.append("Numb Hands")
         if st.checkbox("Numbness"): symptoms_list.append("Numbness")
         if st.checkbox("Shortness of Breath"): symptoms_list.append("Shortness of Breath")
