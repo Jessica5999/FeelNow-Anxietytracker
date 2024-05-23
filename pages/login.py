@@ -22,7 +22,7 @@ def login_page():
         password = st.text_input("Password", type="password")
         if st.form_submit_button("Login"):
             authenticate(username, password)
-             st.switch_page("pages/attack.py")
+            st.switch_page("pages/attack.py")
 
 def register_page():
     """ Register a new user. """
@@ -67,7 +67,7 @@ def authenticate(username, password):
             st.session_state['username'] = username
             st.success('Login successful')
             st.switch_page("pages/attack.py")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error('Incorrect password')
     else:
