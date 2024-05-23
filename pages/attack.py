@@ -4,11 +4,9 @@ import time
 import sys
 import os
 
-# Adding the parent directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main():
-    # Get query parameters to determine the page
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
 
@@ -27,7 +25,7 @@ def show_main_page():
 
     st.write("Anxiety Assessment:")
 
-    answer = st.radio("Are you anxious right now?", ("Yes", "No"))
+    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
     if answer == "Yes":
         st.switch_page("anxiety_protocol.py")
     else:
@@ -39,7 +37,7 @@ def show_main_page():
 
 def switch_page(page_name):
     st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
-    time.sleep(2)
+    time.sleep(3)
     st.experimental_set_query_params(page=page_name)
     st.experimental_rerun()
 
