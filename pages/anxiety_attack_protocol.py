@@ -95,7 +95,7 @@ def add_time_severity():
     if 'time_severity_entries' not in st.session_state:
         st.session_state.time_severity_entries = []
 
-    st.subheader("Record Severity Over Time")
+    st.subheader("Time & Severity")
 
     # Display the current time
     current_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M')
