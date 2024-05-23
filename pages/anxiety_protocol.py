@@ -29,8 +29,8 @@ def register_page():
         new_name = st.text_input("Name")
         new_password = st.text_input("New Password", type="password")
         if st.form_submit_button("Register"):
-            hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt())  # Hash the password
-            hashed_password_hex = binascii.hexlify(hashed_password).decode()  # Convert hash to hexadecimal string
+            hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt())
+            hashed_password_hex = binascii.hexlify(hashed_password).decode()
             
             # Check if the username already exists
             if new_username in st.session_state.df_users['username'].values:
@@ -57,7 +57,7 @@ def authenticate(username, password):
 
     if username in login_df['username'].values:
         stored_hashed_password = login_df.loc[login_df['username'] == username, 'password'].values[0]
-        stored_hashed_password_bytes = binascii.unhexlify(stored_hashed_password)  # Convert hex to bytes
+        stored_hashed_password_bytes = binascii.unhexlify(stored_hashed_password)
         
         # Check the input password
         if bcrypt.checkpw(password.encode('utf8'), stored_hashed_password_bytes): 
@@ -167,13 +167,10 @@ def anxiety_protocol():
             'Help': help_response
         }
         
-        # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
-        
-        # Append the new entry to the existing data DataFrame
+
         st.session_state.anxiety_data = pd.concat([st.session_state.anxiety_data, new_entry_df], ignore_index=True)
-        
-        # Save the updated DataFrame to the user's specific CSV file on GitHub
+
         st.session_state.github.write_df(data_file, st.session_state.anxiety_data, "added new entry")
         st.success("Entry saved successfully!")
 
