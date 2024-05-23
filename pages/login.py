@@ -8,13 +8,7 @@ from github_contents import GithubContents
 DATA_FILE = "MyLoginTable.csv"
 DATA_COLUMNS = ['username', 'name', 'password']
 
-def show():
-    st.title("Login/Register")
-
-def Login():
-    st.image("Logo.jpeg", width=600)
-
-def login_page():
+def show_login():
     st.title("Login")
     with st.form(key='login_form'):
         username = st.text_input("Username")
@@ -22,7 +16,7 @@ def login_page():
         if st.form_submit_button("Login"):
             authenticate(username, password)
 
-def register_page():
+def show_register():
     st.title("Register")
     with st.form(key='register_form'):
         new_username = st.text_input("New Username")
@@ -37,10 +31,9 @@ def register_page():
             else:
                 new_user = pd.DataFrame([[new_username, new_name, hashed_password_hex]], columns=DATA_COLUMNS)
                 st.session_state.df_users = pd.concat([st.session_state.df_users, new_user], ignore_index=True)
-                
                 st.session_state.github.write_df(DATA_FILE, st.session_state.df_users, "added new user")
                 st.success("Registration successful! You can now log in.")
-                st.session_state['page'] = 'attack'
+                st.session_state['page'] = 'login'
 
 def authenticate(username, password):
     login_df = st.session_state.df_users
@@ -55,6 +48,7 @@ def authenticate(username, password):
             st.session_state['username'] = username
             st.success('Login successful')
             st.session_state['page'] = 'attack'
+            st.experimental_rerun()
         else:
             st.error('Incorrect password')
     else:
@@ -81,21 +75,28 @@ def main():
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
 
+    if 'page' not in st.session_state:
+        st.session_state['page'] = 'login'
+
+    if st.session_state['authentication']:
+        st.session_state['page'] = 'attack'
+
+    if st.session_state['page'] == 'login':
+        show_login()
+    elif st.session_state['page'] == 'register':
+        show_register()
+    elif st.session_state['page'] == 'attack':
+        st.experimental_set_query_params(page="attack")
+        st.experimental_rerun()
+
     if not st.session_state['authentication']:
         options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
         if options == "Login":
-            login_page()
-        elif options == "Register":
-            register_page()
-    else:
-        logout_button = st.button("Logout")
-        if logout_button:
-            st.session_state['authentication'] = False
             st.session_state['page'] = 'login'
-            st.experimental_rerun()
-    
-    if 'page' in st.session_state and st.session_state['page'] == 'attack':
-        st.experimental_set_query_params(page="attack")
+            show_login()
+        elif options == "Register":
+            st.session_state['page'] = 'register'
+            show_register()
 
 if __name__ == "__main__":
     main()
