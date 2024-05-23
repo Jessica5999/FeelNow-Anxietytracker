@@ -41,8 +41,8 @@ def main():
         from pages import anxiety_protocol
         anxiety_protocol.show_page()
     elif page == "attack":
-        from pages import attack as attack_protocol
-        attack_protocol.show_page()
+        from pages import attack
+        attack.show_page()
     else:
         show_main_page()
 
