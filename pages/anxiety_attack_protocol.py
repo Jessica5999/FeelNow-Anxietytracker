@@ -4,12 +4,16 @@ import pandas as pd
 import bcrypt
 import binascii
 from github_contents import GithubContents
+from pytz import timezone
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
 DATA_COLUMNS = ['username', 'name', 'password']
 ATTACK_DATA_FILE = "AttackData.csv"
 ATTACK_DATA_COLUMNS = ['username', 'date', 'time_severity', 'symptoms', 'triggers', 'help_response']
+
+# Set the time zone to Switzerland
+swiss_tz = timezone('Europe/Zurich')
 
 # Initialize session state variables
 if 'authentication' not in st.session_state:
@@ -24,6 +28,12 @@ if 'symptoms' not in st.session_state:
 
 if 'triggers' not in st.session_state:
     st.session_state['triggers'] = []
+
+if 'show_time_severity' not in st.session_state:
+    st.session_state['show_time_severity'] = False
+
+if 'button_count' not in st.session_state:
+    st.session_state['button_count'] = 0
 
 def init_github():
     """Initialize the GithubContents object."""
@@ -109,25 +119,27 @@ def anxiety_attack_protocol():
     
     # Question 2: Time & Severity
     st.subheader("Time & Severity")
-    for i in range(len(st.session_state.times) + 1):
-        if i < len(st.session_state.times):
-            time_selected, severity = st.session_state.times[i]
-        else:
-            time_selected = datetime.datetime.now().time()
-            severity = 1
+    if st.session_state.show_time_severity:
+        for i in range(st.session_state.button_count + 1):
+            if i < len(st.session_state.times):
+                time_selected, severity = st.session_state.times[i]
+            else:
+                time_selected = datetime.datetime.now(swiss_tz).time()
+                severity = 1
 
-        time_selected_str = st.text_input(f"Time {i+1}", value=time_selected.strftime('%H:%M'), key=f"time_input_{i}")
-        time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
-        
-        severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
-        
-        if len(st.session_state.times) <= i:
-            st.session_state.times.append((time_selected, severity))
-        else:
-            st.session_state.times[i] = (time_selected, severity)
+            time_selected_str = st.text_input(f"Time {i+1}", value=time_selected.strftime('%H:%M'), key=f"time_input_{i}")
+            time_selected = datetime.datetime.strptime(time_selected_str, '%H:%M').time()
+            
+            severity = st.slider(f"Severity (1-10) {i+1}", min_value=1, max_value=10, value=severity, key=f"severity_slider_{i}")
+            
+            if len(st.session_state.times) <= i:
+                st.session_state.times.append((time_selected, severity))
+            else:
+                st.session_state.times[i] = (time_selected, severity)
 
     if st.button("Add Time & Severity"):
-        st.session_state.times.append((datetime.datetime.now().time(), 1))
+        st.session_state.show_time_severity = True
+        st.session_state.button_count += 1
 
     # Question 3: Symptoms
     st.subheader("Symptoms:")
@@ -206,15 +218,24 @@ def main():
         elif options == "Register":
             register_page()
     else:
+        st.title("FeelNow")
         anxiety_attack_protocol()
+
+        st.header("Saved Entries")
+        if st.session_state.github.file_exists(ATTACK_DATA_FILE):
+            data = st.session_state.github.read_df(ATTACK_DATA_FILE)
+            user_data = data[data['username'] == st.session_state['username']]
+            if not user_data.empty:
+                st.write("## Anxiety Attack Protocol Data")
+                st.table(user_data)
+            else:
+                st.write("No data available")
+        else:
+            st.write("No data available")
+        
         if st.button("Logout"):
             st.session_state['authentication'] = False
-            st.session_state['username'] = None
             st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
-
-
-
-
