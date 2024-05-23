@@ -31,7 +31,29 @@ def show_main_page():
             switch_page("anxiety_attack_protocol")
         else:
             st.write("Reassess your feelings")
+    init_github()
+    init_credentials()
 
+    if 'authentication' not in st.session_state:
+        st.session_state['authentication'] = False
+
+    if not st.session_state['authentication']:
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
+        if options == "Login":
+            login_page()
+        elif options == "Register":
+            register_page()
+            
+    else:
+        st.sidebar.write(f"Logged in as {st.session_state['username']}")
+        anxiety_protocol()
+
+        logout_button = st.button("Logout")
+        if logout_button:
+            st.session_state['authentication'] = False
+            st.session_state.pop('username', None)
+            st.experimental_rerun()
+            
 # Hauptfunktion zur Steuerung der Navigation
 def main():
     query_params = st.experimental_get_query_params()
