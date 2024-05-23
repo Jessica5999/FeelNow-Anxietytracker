@@ -120,7 +120,7 @@ def anxiety_attack_protocol():
     # Question 2: Time & Severity
     st.subheader("Time & Severity")
     if st.session_state.show_time_severity:
-        for i in range(st.session_state.button_count + 1):
+        for i in range(st.session_state.button_count):
             if i < len(st.session_state.times):
                 time_selected, severity = st.session_state.times[i]
             else:
@@ -140,6 +140,9 @@ def anxiety_attack_protocol():
     if st.button("Add Time & Severity"):
         st.session_state.show_time_severity = True
         st.session_state.button_count += 1
+        time_selected = datetime.datetime.now(swiss_tz).time()
+        severity = 1
+        st.session_state.times.append((time_selected, severity))
 
     # Question 3: Symptoms
     st.subheader("Symptoms:")
