@@ -82,11 +82,13 @@ def main():
     if st.session_state['authentication']:
         st.session_state['page'] = 'attack'
 
-    if st.session_state['page'] == 'login':
+    page = st.session_state['page']
+
+    if page == 'login':
         show_login()
-    elif st.session_state['page'] == 'register':
+    elif page == 'register':
         show_register()
-    elif st.session_state['page'] == 'attack':
+    elif page == 'attack':
         st.experimental_set_query_params(page="attack")
         st.experimental_rerun()
 
@@ -94,10 +96,10 @@ def main():
         options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
         if options == "Login":
             st.session_state['page'] = 'login'
-            show_login()
+            st.experimental_rerun()
         elif options == "Register":
             st.session_state['page'] = 'register'
-            show_register()
+            st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
