@@ -24,11 +24,11 @@ def show_main_page():
 
     answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
     if answer == "Yes":
-        st.switch_page("anxiety_protocol")
+        switch_page("anxiety_protocol")
     else:
         answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
         if answer_2 == "Yes":
-            st.switch_page("anxiety_attack_protocol")
+            switch_page("anxiety_attack_protocol")
         else:
             st.write("Reassess your feelings")
             
