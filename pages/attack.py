@@ -113,5 +113,24 @@ def init_github():
             st.secrets["github"]["token"])
         print("github initialized")
 
+def main():
+    init_github()
+    init_credentials()
+
+    if 'authentication' not in st.session_state:
+        st.session_state['authentication'] = False
+
+    if not st.session_state['authentication']:
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
+        if options == "Login":
+            login_page()
+        elif options == "Register":
+            register_page()
+    else:
+        logout_button = st.button("Logout")
+        if logout_button:
+            st.session_state['authentication'] = False
+            st.experimental_rerun()
+
 if __name__ == "__main__":
     show_main_page()
