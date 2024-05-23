@@ -39,7 +39,7 @@ def switch_page(page_name):
     st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
     time.sleep(3)
     st.experimental_set_query_params(page=page_name)
-    st.rerun()
+    st.experimental_rerun()
 
 if __name__ == "__main__":
     show_main_page()
