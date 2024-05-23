@@ -95,14 +95,19 @@ def add_time_severity():
     if 'time_severity_entries' not in st.session_state:
         st.session_state.time_severity_entries = []
 
+    st.subheader("Record Severity Over Time")
+
     # Button to add a new time-severity entry
-    if st.button("Add Severity"):
-        swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
-        new_entry = {
-            'time': swiss_time,
-            'severity': st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_{len(st.session_state.time_severity_entries)}")
-        }
-        st.session_state.time_severity_entries.append(new_entry)
+    with st.form(key='severity_form'):
+        severity = st.slider("Severity (1-10)", min_value=1, max_value=10, key=f"severity_slider")
+        if st.form_submit_button("Add Severity"):
+            swiss_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+            new_entry = {
+                'time': swiss_time,
+                'severity': severity
+            }
+            st.session_state.time_severity_entries.append(new_entry)
+            st.success(f"Added entry: Time: {swiss_time}, Severity: {severity}")
 
     # Display all time-severity entries
     for entry in st.session_state.time_severity_entries:
