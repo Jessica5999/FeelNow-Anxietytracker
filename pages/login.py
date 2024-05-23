@@ -22,6 +22,7 @@ def login_page():
         password = st.text_input("Password", type="password")
         if st.form_submit_button("Login"):
             authenticate(username, password)
+             st.switch_page("pages/attack.py")
 
 def register_page():
     """ Register a new user. """
