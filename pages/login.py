@@ -67,7 +67,7 @@ def authenticate(username, password):
             st.session_state['username'] = username
             st.success('Login successful')
             st.switch_page("pages/attack.py")
-            st.rerun()
+            st.experimental_rerun()
         else:
             st.error('Incorrect password')
     else:
