@@ -34,7 +34,6 @@ def register_page():
             hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt())  # Hash the password
             hashed_password_hex = binascii.hexlify(hashed_password).decode()  # Convert hash to hexadecimal string
             
-            # Check if the username already exists
             if new_username in st.session_state.df_users['username'].values:
                 st.error("Username already exists. Please choose a different one.")
                 return
@@ -61,7 +60,6 @@ def authenticate(username, password):
         stored_hashed_password = login_df.loc[login_df['username'] == username, 'password'].values[0]
         stored_hashed_password_bytes = binascii.unhexlify(stored_hashed_password)  # Convert hex to bytes
         
-        # Check the input password
         if bcrypt.checkpw(password.encode('utf8'), stored_hashed_password_bytes): 
             st.session_state['authentication'] = True
             st.session_state['username'] = username
