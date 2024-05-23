@@ -39,10 +39,10 @@ def main():
 
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
-        anxiety_protocol.show_page()
+        anxiety_protocol.show()
     elif page == "attack":
-        from pages import attack
-        attack.show_page()
+        from pages import anxiety_attack_protocol
+        anxiety_attack_protocol.show()
     else:
         show_main_page()
 
