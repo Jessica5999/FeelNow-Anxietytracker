@@ -4,6 +4,21 @@ import time
 import sys
 import os
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+def main():
+    query_params = st.experimental_get_query_params()
+    page = query_params.get("page", ["main"])[0]
+
+    if page == "anxiety_protocol":
+        from pages import anxiety_protocol
+        
+    elif page == "anxiety_attack_protocol":
+        from pages import anxiety_attack_protocol as attack_protocol
+        
+    else:
+        show_main_page()
+
 def show_main_page():
     st.image("Logo.jpeg", width=600)
     st.write("---")
