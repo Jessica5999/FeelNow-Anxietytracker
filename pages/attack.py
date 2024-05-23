@@ -18,19 +18,6 @@ def switch_page(page_name):
 
 # Hauptseite anzeigen
 def show_main_page():
-    st.image("Logo.jpeg", width=600)
-    st.write("---")
-    st.write("Anxiety Assessment:")
-
-    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
-    if answer == "Yes":
-        switch_page("anxiety_protocol")
-    else:
-        answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
-        if answer_2 == "Yes":
-            switch_page("anxiety_attack_protocol")
-        else:
-            st.write("Reassess your feelings")
     init_github()
     init_credentials()
 
@@ -53,6 +40,19 @@ def show_main_page():
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
             st.experimental_rerun()
+    st.image("Logo.jpeg", width=600)
+    st.write("---")
+    st.write("Anxiety Assessment:")
+
+    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
+    if answer == "Yes":
+        switch_page("anxiety_protocol")
+    else:
+        answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
+        if answer_2 == "Yes":
+            switch_page("anxiety_attack_protocol")
+        else:
+            st.write("Reassess your feelings")
             
 # Hauptfunktion zur Steuerung der Navigation
 def main():
