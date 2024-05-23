@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main():
     query_params = st.experimental_get_query_params()
-    page = query_params.get("page", ["main"])[1]
+    page = query_params.get("page", ["main"])[0]
 
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
