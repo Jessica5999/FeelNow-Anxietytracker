@@ -133,4 +133,4 @@ def main():
             st.experimental_rerun()
 
 if __name__ == "__main__":
-    show_main_page()
+    main()
