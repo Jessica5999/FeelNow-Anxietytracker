@@ -9,42 +9,39 @@ import bcrypt
 from github_contents import GithubContents
 import datetime
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+def switch_page(page_name):
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
 
+# Hauptseite anzeigen
+def show_main_page():
+    st.image("Logo.jpeg", width=600)
+    st.write("---")
+    st.write("Anxiety Assessment:")
+
+    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
+    if answer == "Yes":
+        switch_page("anxiety_protocol")
+    else:
+        answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
+        if answer_2 == "Yes":
+            switch_page("attack")
+        else:
+            st.write("Reassess your feelings")
+
+# Hauptfunktion zur Steuerung der Navigation
 def main():
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
 
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
-        
-    elif page == "anxiety_attack_protocol":
-        from pages import anxiety_attack_protocol as attack_protocol
-        
+        anxiety_protocol.show_page()
+    elif page == "attack":
+        from pages import attack as attack_protocol
+        attack_protocol.show_page()
     else:
         show_main_page()
-
-def show_main_page():
-    st.image("Logo.jpeg", width=600)
-    st.write("---")
-
-    st.write("Anxiety Assessment:")
-
-    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
-    if answer == "Yes":
-        st.switch_page("pages/anxiety_protocol.py")
-    else:
-        answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
-        if answer_2 == "Yes":
-            st.switch_page("pages/attack_protocol.py")
-        else:
-            st.write("Reassess your feelings")
-
-def switch_page(page_name):
-    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
-    time.sleep(3)
-    st.experimental_set_query_params(page=page_name)
-    st.experimental_rerun()
 
 def login_page():
     """ Login an existing user. """
