@@ -14,6 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Funktion zur Seitenumschaltung
 def switch_page(page_name):
     st.experimental_set_query_params(page=page_name)
+    time.sleep(4)
     st.experimental_rerun()
 
 # Hauptseite anzeigen
