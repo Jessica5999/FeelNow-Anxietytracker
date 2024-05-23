@@ -98,7 +98,7 @@ def add_time_severity():
     st.subheader("Record Severity Over Time")
 
     # Display the current time
-    current_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M:%S')
+    current_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M')
     st.write(f"Current Time: {current_time}")
 
     # Button to add a new time-severity entry
