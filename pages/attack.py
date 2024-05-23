@@ -9,6 +9,9 @@ import bcrypt
 from github_contents import GithubContents
 import datetime
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Funktion zur Seitenumschaltung
 def switch_page(page_name):
     st.experimental_set_query_params(page=page_name)
     st.experimental_rerun()
@@ -21,11 +24,11 @@ def show_main_page():
 
     answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
     if answer == "Yes":
-        st.switch_page("pages/anxiety_protocol.py")
+        switch_page("anxiety_protocol")
     else:
         answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
         if answer_2 == "Yes":
-            st.switch_page("pages/anxiety_attack_protocol.py")
+            switch_page("attack")
         else:
             st.write("Reassess your feelings")
 
@@ -33,12 +36,13 @@ def show_main_page():
 def main():
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
+
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
-        anxiety_protocol.show()
+        anxiety_protocol.show_page()
     elif page == "attack":
-        from pages import anxiety_attack_protocol as attack_protocol
-        attack_protocol.show()
+        from pages import attack as attack_protocol
+        attack_protocol.show_page()
     else:
         show_main_page()
 
@@ -110,4 +114,4 @@ def init_github():
         print("github initialized")
 
 if __name__ == "__main__":
-    show_main_page()
+    main()
