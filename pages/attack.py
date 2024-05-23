@@ -33,11 +33,11 @@ def show_main_page():
 def main():
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
-
     if page == "anxiety_protocol":
         from pages import anxiety_protocol
         anxiety_protocol.show()
     elif page == "attack":
+    elif page == "anxiety_attack_protocol":
         from pages import anxiety_attack_protocol as attack_protocol
         attack_protocol.show()
     else:
