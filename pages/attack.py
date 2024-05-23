@@ -19,6 +19,22 @@ def switch_page(page_name):
     st.experimental_rerun()
 
 # Hauptseite anzeigen
+def show_main_page():
+    st.image("Logo.jpeg", width=600)
+    st.write("---")
+    st.write("Anxiety Assessment:")
+
+    answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
+    if answer == "Yes":
+        switch_page("anxiety_protocol")
+    else:
+        answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
+        if answer_2 == "Yes":
+            switch_page("anxiety_attack_protocol")
+        else:
+            st.write("Reassess your feelings")
+            
+# Hauptfunktion zur Steuerung der Navigation
 def main_page():
     query_params = st.experimental_get_query_params()
     page = query_params.get("page", ["main"])[0]
@@ -30,19 +46,7 @@ def main_page():
         from pages import anxiety_attack_protocol
         anxiety_attack_protocol.show()
     else:
-        st.image("Logo.jpeg", width=600)
-        st.write("---")
-        st.write("Anxiety Assessment:")
-
-        answer = st.radio("Are you anxious right now, without having an attack?", ("Yes", "No"))
-        if answer == "Yes":
-            switch_page("anxiety_protocol")
-        else:
-            answer_2 = st.radio("Do you feel like you're having an Anxiety Attack right now?", ("Yes", "No"))
-            if answer_2 == "Yes":
-                switch_page("anxiety_attack_protocol")
-            else:
-                st.write("Reassess your feelings")
+        show_main_page()
 
 def login_page():
     """ Login an existing user. """
@@ -139,4 +143,4 @@ def main():
             st.experimental_rerun()
 
 if __name__ == "__main__":
-    main_page()
+    show_main_page()
