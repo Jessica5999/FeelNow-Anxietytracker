@@ -64,6 +64,7 @@ def authenticate(username, password):
             st.session_state['authentication'] = True
             st.session_state['username'] = username
             st.success('Login successful')
+            st.switch_page("pages/attack.py")
             st.experimental_rerun()
         else:
             st.error('Incorrect password')
@@ -101,7 +102,6 @@ def main():
         elif options == "Register":
             register_page()
     else:
-        st.switch_page("pages/attack.py")
         logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
@@ -109,6 +109,7 @@ def main():
 
 def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
+    time.sleep(2)
 
 if __name__ == "__main__":
     main()
