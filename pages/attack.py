@@ -113,6 +113,14 @@ def init_github():
             st.secrets["github"]["token"])
         print("github initialized")
 
+def init_credentials():
+    """Initialize or load the dataframe."""
+    if 'df_users' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE):
+            st.session_state.df_users = st.session_state.github.read_df(DATA_FILE)
+        else:
+            st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
+
 def main():
     init_github()
     init_credentials()
