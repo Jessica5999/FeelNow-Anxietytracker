@@ -35,7 +35,13 @@ def translate_text(text, target_language):
         st.error("Error in translation API call.")
         return text
 
-    return response.json()["translations"][0]["text"]
+    try:
+        translated_text = response.json()["translations"][0]["text"]
+    except KeyError:
+        st.error("Unexpected response format.")
+        return text
+
+    return translated_text
 
 # Sidebar for language selection
 st.sidebar.title("Language Selection")
