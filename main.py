@@ -1,64 +1,64 @@
 import streamlit as st
-from google.cloud import translate_v2 as translate
+from github_contents import GithubContents
+import requests
 
-# Initialize the Google Cloud Translator
-translate_client = translate.Client()
+# Set up GitHub connection
+github = GithubContents(
+    st.secrets["github"]["owner"],
+    st.secrets["github"]["repo"],
+    st.secrets["github"]["token"])
 
-# Function to translate text
-def translate_text(text, dest_language):
-    if dest_language == "en":
-        return text
-    try:
-        result = translate_client.translate(text, target_language=dest_language)
-        return result['translatedText']
-    except Exception as e:
-        st.error(f"Translation error: {e}")
-        return text
+# Function to translate text using DeepL API
+def translate_text(text, target_language):
+    url = "https://api-free.deepl.com/v2/translate"
+    headers = {
+        "Authorization": f"DeepL-Auth-Key {st.secrets['deepl']['api_key']}"
+    }
+    data = {
+        "text": text,
+        "target_lang": target_language
+    }
+    response = requests.post(url, headers=headers, data=data)
+    return response.json()["translations"][0]["text"]
 
-# Function to show main page with dynamic content
-def show_main_page(language):
+# Sidebar for language selection
+st.sidebar.title("Language Selection")
+language = st.sidebar.selectbox("Choose language", ["EN", "DE", "FR", "ES", "IT", "NL"])
+
+def show():
+    st.title("Main Page")
+
+def main_page():
     st.image("Logo.jpeg", width=600)
-    st.subheader(translate_text("Anxiety Tracker Journal", language))
-    st.write(translate_text("""
-        Welcome to FeelNow, your anxiety attack journal.
-        This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
-        and feelings during anxiety attacks.
-        
-        ## What is FeelNow
-        FeelNow is an app with which you can easily assess and monitor an acute panic attack. It is just like a diary and helps you to keep an eye on your mental health.
-        
-        ## What can the App do
-        The app is supposed to help you write down important parts of a panic attack or even simply for your anxiety. It simplifies taking notes while feeling distressed by having the option to just choose how you're feeling instead of having to write your feelings down yourself.
-        
-        ## How do I use it
-        You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
-    """, language))
+    st.subheader("Anxiety Tracker Journal")
+
+    # Texts to translate
+    texts = {
+        "welcome": "Welcome to FeelNow, your anxiety attack journal. This app helps you track and manage your anxiety by providing a platform to journal your thoughts and feelings during anxiety attacks.",
+        "what_is_feelnow": "FeelNow is an app with which you can easily assess and monitor an acute panic attack. It is just like a diary and helps you to keep an eye on your mental health.",
+        "what_can_app_do": "The app is supposed to help you write down important parts of a panic attack or even simply for your anxiety. It simplifies taking notes while feeling distressed by having the option to just choose how you're feeling instead of having to write your feelings down yourself.",
+        "how_to_use": "You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version."
+    }
+
+    # Translate texts
+    translated_texts = {key: translate_text(text, language) for key, text in texts.items()}
+
+    st.write(translated_texts["welcome"])
+    st.write("## What is FeelNow")
+    st.write(translated_texts["what_is_feelnow"])
+    st.write("## What can the App do")
+    st.write(translated_texts["what_can_app_do"])
+    st.write("## How do I use it")
+    st.write(translated_texts["how_to_use"])
 
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
-        if st.button(translate_text("Login/Register", language)):
-            st.write("Redirecting to login/register page...")  # Placeholder for page switch logic
+        if st.button("Login/Register"):
+            st.switch_page("pages/login.py")
 
-# Function to handle language selection
-def select_language():
-    language = st.selectbox(
-        "Choose Language / Sprache wählen", 
-        ["en", "de", "es", "fr", "it", "pt", "ru", "zh"]
-    )
-    st.session_state["language"] = language
-
-# Main function
-def main():
-    # Initialize session state
-    if "language" not in st.session_state:
-        st.session_state["language"] = "en"
-
-    # Language selection
-    select_language()
-    language = st.session_state["language"]
-
-    # Show main page content based on selected language
-    show_main_page(language)
+def switch_page(page_name):
+    st.success("Redirecting to {} page...".format(page_name))
+    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
 
 if __name__ == "__main__":
-    main()
+    main_page()
