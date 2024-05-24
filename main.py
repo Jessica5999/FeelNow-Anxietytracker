@@ -45,14 +45,11 @@ languages = {
     # Add more languages as needed
 }
 
-# Function to translate text
+# Function to translate text except for the word "FeelNow"
 def translate_text(text, src, dest):
-    try:
-        translated = translator.translate(text, src=src, dest=dest)
-        return translated.text.replace("FeelNow", "FeelNow")  # Ensure "FeelNow" stays the same
-    except Exception as e:
-        st.error(f"Error translating text: {e}")
-        return text
+    text_parts = text.split("FeelNow")
+    translated_parts = [translator.translate(part, src=src, dest=dest).text for part in text_parts]
+    return "FeelNow".join(translated_parts)
 
 # Function to get translated text
 def get_translation(key, lang):
@@ -67,10 +64,7 @@ def load_translations():
         if lang != "en":
             for key in translations["en"].keys():
                 translations[lang] = translations.get(lang, {})
-                if key == "title" or "FeelNow" not in translations["en"][key]:
-                    translations[lang][key] = translate_text(translations["en"][key], src="en", dest=lang)
-                else:
-                    translations[lang][key] = translate_text(translations["en"][key].replace("FeelNow", ""), src="en", dest=lang).replace("", "FeelNow")
+                translations[lang][key] = translate_text(translations["en"][key], src="en", dest=lang)
 
 # Load translations at startup
 load_translations()
@@ -89,8 +83,11 @@ def main_page(lang):
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(get_translation("login_button", lang)):
-            st.session_state['current_page'] = "pages/login.py"
-            st.experimental_rerun()
+            switch_page("pages/login.py")
+
+def switch_page(page_name):
+    if page_name == "pages/login.py":
+        st.session_state['current_page'] = page_name
 
 # Main function
 def main():
