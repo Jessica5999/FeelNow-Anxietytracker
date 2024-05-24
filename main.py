@@ -10,15 +10,25 @@ github = GithubContents(
 
 # Function to translate text using DeepL API
 def translate_text(text, target_language):
+    try:
+        api_key = st.secrets["deepl"]["api_key"]
+    except KeyError:
+        st.error("DeepL API key is missing. Please add it to your Streamlit secrets.")
+        return text
+
     url = "https://api-free.deepl.com/v2/translate"
     headers = {
-        "Authorization": f"DeepL-Auth-Key {st.secrets['deepl']['api_key']}"
+        "Authorization": f"DeepL-Auth-Key {api_key}"
     }
     data = {
         "text": text,
         "target_lang": target_language
     }
     response = requests.post(url, headers=headers, data=data)
+    if response.status_code != 200:
+        st.error("Error in translation API call.")
+        return text
+
     return response.json()["translations"][0]["text"]
 
 # Sidebar for language selection
