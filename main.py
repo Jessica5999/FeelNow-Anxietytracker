@@ -1,18 +1,27 @@
 import streamlit as st
 from github_contents import GithubContents
+from googletrans import Translator
 
+# Initialize GithubContents and Translator
 github = GithubContents(
     st.secrets["github"]["owner"],
     st.secrets["github"]["repo"],
-    st.secrets["github"]["token"])
+    st.secrets["github"]["token"]
+)
+translator = Translator()
 
-def show():
-    st.title("Main Page")
+# Function to translate text
+def translate_text(text, dest_language):
+    if dest_language == "en":
+        return text
+    translation = translator.translate(text, dest=dest_language)
+    return translation.text
 
-def main_page():
+# Function to show main page with dynamic content
+def show_main_page(language):
     st.image("Logo.jpeg", width=600)
-    st.subheader("Anxiety Tracker Journal")
-    st.write("""
+    st.subheader(translate_text("Anxiety Tracker Journal", language))
+    st.write(translate_text("""
         Welcome to FeelNow, your anxiety attack journal.
         This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
         and feelings during anxiety attacks.
@@ -25,16 +34,33 @@ def main_page():
         
         ## How do I use it
         You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
-        """)
+    """, language))
 
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
-        if st.button("Login/Register"):
+        if st.button(translate_text("Login/Register", language)):
             st.switch_page("pages/login.py")
 
-def switch_page(page_name):
-    st.success("Redirecting to {} page...".format(page_name))
-    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
+# Function to handle language selection
+def select_language():
+    language = st.selectbox(
+        "Choose Language / Sprache wählen", 
+        ["en", "de", "es", "fr", "it", "pt", "ru", "zh"]
+    )
+    st.session_state["language"] = language
+
+# Main function
+def main():
+    # Initialize session state
+    if "language" not in st.session_state:
+        st.session_state["language"] = "en"
+
+    # Language selection
+    select_language()
+    language = st.session_state["language"]
+
+    # Show main page content based on selected language
+    show_main_page(language)
 
 if __name__ == "__main__":
-    main_page()
+    main()
