@@ -3,5 +3,5 @@ pandas
 bcrypt
 googletrans
 googletrans_new
-google_translator
+
 
