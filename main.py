@@ -43,7 +43,7 @@ def show_main_page(language):
 
 # Function to handle language selection
 def select_language():
-    language = st.selectbox(
+    language = st.sidebar.selectbox(
         "Choose Language / Sprache wählen", 
         ["en", "de", "es", "fr", "it", "pt", "ru", "zh"]
     )
