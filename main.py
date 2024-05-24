@@ -76,12 +76,11 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(translations[lang_key]["login_register"]):
-            st.success("Redirecting to login/register page...")
             switch_page("pages/login.py")
 
 def switch_page(page_name):
-    # Add logic to switch to the specified page
-    st.success(f"Redirecting to {page_name} page...")
+    st.success("Redirecting to {} page...".format(page_name))
+    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
 
 if __name__ == "__main__":
     main_page()
