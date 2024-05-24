@@ -1,6 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-from translate import Translator
+import requests
 
 # Set up GitHub connection
 github = GithubContents(
@@ -8,15 +8,23 @@ github = GithubContents(
     st.secrets["github"]["repo"],
     st.secrets["github"]["token"])
 
-# Function to translate text using MyMemory API
+# Function to translate text using LibreTranslate API
 def translate_text(text, target_language):
-    translator = Translator(to_lang=target_language)
-    try:
-        translation = translator.translate(text)
-    except Exception as e:
-        st.error(f"Error in translation: {e}")
+    url = "https://libretranslate.com/translate"
+    data = {
+        "q": text,
+        "source": "en",
+        "target": target_language,
+        "format": "text"
+    }
+    response = requests.post(url, data=data)
+    
+    if response.status_code != 200:
+        st.error("Error in translation API call.")
         return text
-    return translation
+
+    translated_text = response.json()["translatedText"]
+    return translated_text
 
 # Sidebar for language selection
 st.sidebar.title("Language Selection")
@@ -38,7 +46,15 @@ def main_page():
     }
 
     # Translate texts
-    translated_texts = {key: translate_text(text, language) for key, text in texts.items()}
+    language_map = {
+        "en": "en",
+        "de": "de",
+        "fr": "fr",
+        "es": "es",
+        "it": "it",
+        "nl": "nl"
+    }
+    translated_texts = {key: translate_text(text, language_map[language]) for key, text in texts.items()}
 
     st.write(translated_texts["welcome"])
     st.write("## What is FeelNow")
