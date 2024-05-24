@@ -1,16 +1,16 @@
 import streamlit as st
-from google_trans_new import google_translator  
+from google.cloud import translate_v2 as translate
 
-# Initialize the translator
-translator = google_translator()  
+# Initialize the Google Cloud Translator
+translate_client = translate.Client()
 
 # Function to translate text
 def translate_text(text, dest_language):
     if dest_language == "en":
         return text
     try:
-        translation = translator.translate(text, lang_tgt=dest_language)
-        return translation
+        result = translate_client.translate(text, target_language=dest_language)
+        return result['translatedText']
     except Exception as e:
         st.error(f"Translation error: {e}")
         return text
