@@ -1,7 +1,6 @@
 streamlit
 pandas
 bcrypt
-googletrans
 googletrans_new
 
 
