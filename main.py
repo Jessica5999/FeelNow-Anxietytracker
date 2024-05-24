@@ -1,16 +1,16 @@
 import streamlit as st
-from googletrans import Translator
+from google_trans_new import google_translator  
 
 # Initialize the translator
-translator = Translator()
+translator = google_translator()  
 
 # Function to translate text
 def translate_text(text, dest_language):
     if dest_language == "en":
         return text
     try:
-        translation = translator.translate(text, dest=dest_language)
-        return translation.text
+        translation = translator.translate(text, lang_tgt=dest_language)
+        return translation
     except Exception as e:
         st.error(f"Translation error: {e}")
         return text
