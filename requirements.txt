@@ -1,6 +1,9 @@
 streamlit
 pandas
 bcrypt
+github_contents
+requests
 translate-python
+
 
 
