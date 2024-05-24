@@ -1,6 +1,5 @@
 streamlit
 pandas
 bcrypt
-googletrans
 deep1
 
