@@ -12,6 +12,7 @@ github = GithubContents(
 def translate_text(text, target_language):
     try:
         api_key = st.secrets["deepl"]["api_key"]
+        st.write(f"Using DeepL API Key: {api_key[:4]}...{api_key[-4:]}")  # Ausgabe des API-Schlüssels zur Überprüfung (teilweise)
     except KeyError:
         st.error("DeepL API key is missing. Please add it to your Streamlit secrets.")
         return text
