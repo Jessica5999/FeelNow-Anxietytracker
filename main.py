@@ -1,6 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-import requests
+from translate import Translator
 
 # Set up GitHub connection
 github = GithubContents(
@@ -8,44 +8,19 @@ github = GithubContents(
     st.secrets["github"]["repo"],
     st.secrets["github"]["token"])
 
-# Function to translate text using DeepL API
+# Function to translate text using MyMemory API
 def translate_text(text, target_language):
+    translator = Translator(to_lang=target_language)
     try:
-        api_key = st.secrets["deepl"]["api_key"]
-        st.write(f"Using DeepL API Key: {api_key[:4]}...{api_key[-4:]}")  # Ausgabe des API-Schlüssels zur Überprüfung (teilweise)
-    except KeyError:
-        st.error("DeepL API key is missing. Please add it to your Streamlit secrets.")
+        translation = translator.translate(text)
+    except Exception as e:
+        st.error(f"Error in translation: {e}")
         return text
-
-    url = "https://api-free.deepl.com/v2/translate"
-    headers = {
-        "Authorization": f"DeepL-Auth-Key {api_key}"
-    }
-    data = {
-        "text": text,
-        "target_lang": target_language
-    }
-    response = requests.post(url, headers=headers, data=data)
-    
-    # Log the entire response for debugging
-    st.write(f"API Response Status Code: {response.status_code}")
-    st.write(f"API Response Content: {response.content}")
-
-    if response.status_code != 200:
-        st.error("Error in translation API call.")
-        return text
-
-    try:
-        translated_text = response.json()["translations"][0]["text"]
-    except KeyError:
-        st.error("Unexpected response format.")
-        return text
-
-    return translated_text
+    return translation
 
 # Sidebar for language selection
 st.sidebar.title("Language Selection")
-language = st.sidebar.selectbox("Choose language", ["EN", "DE", "FR", "ES", "IT", "NL"])
+language = st.sidebar.selectbox("Choose language", ["en", "de", "fr", "es", "it", "nl"])
 
 def show():
     st.title("Main Page")
