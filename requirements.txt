@@ -1,6 +1,6 @@
 streamlit
 pandas
 bcrypt
-google-cloud-translate
+
 
 
