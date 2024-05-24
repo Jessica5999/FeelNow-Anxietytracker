@@ -1,20 +1,20 @@
 import streamlit as st
 from github_contents import GithubContents
-from googletrans import Translator
+import deepl
 
-# Initialize GithubContents and Translator
+# Initialize GithubContents and DeepL Translator
 github = GithubContents(
     st.secrets["github"]["owner"],
     st.secrets["github"]["repo"],
     st.secrets["github"]["token"]
 )
-translator = Translator()
+translator = deepl.Translator(st.secrets["deepl"]["api_key"])
 
 # Function to translate text
 def translate_text(text, dest_language):
     if dest_language == "en":
         return text
-    translation = translator.translate(text, dest=dest_language)
+    translation = translator.translate_text(text, target_lang=dest_language.upper())
     return translation.text
 
 # Function to show main page with dynamic content
@@ -43,7 +43,7 @@ def show_main_page(language):
 
 # Function to handle language selection
 def select_language():
-    language = st.sidebar.selectbox(
+    language = st.selectbox(
         "Choose Language / Sprache wählen", 
         ["en", "de", "es", "fr", "it", "pt", "ru", "zh"]
     )
