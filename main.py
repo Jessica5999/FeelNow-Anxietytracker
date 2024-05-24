@@ -1,5 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
+from streamlit_extras.switch_page_button import switch_page
 
 github = GithubContents(
     st.secrets["github"]["owner"],
@@ -59,10 +60,6 @@ language = st.sidebar.selectbox("Select Language", ("English", "Deutsch"))
 # Map selected language to dictionary key
 lang_key = "en" if language == "English" else "de"
 
-# Initialize session state
-if 'page' not in st.session_state:
-    st.session_state.page = 'main'
-
 def main_page():
     st.image("Logo.jpeg", width=600)
     st.subheader(translations[lang_key]["subheader"])
@@ -77,16 +74,7 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(translations[lang_key]["login_register"]):
-            st.session_state.page = 'login'
+            switch_page("login")  # Use the name of the login page file without the .py extension
 
-def login_page():
-    st.title("Login Page")
-    # Add your login logic here
-    if st.button("Back to Main"):
-        st.session_state.page = 'main'
-
-# Page switcher
-if st.session_state.page == 'main':
+if __name__ == "__main__":
     main_page()
-elif st.session_state.page == 'login':
-    login_page()
