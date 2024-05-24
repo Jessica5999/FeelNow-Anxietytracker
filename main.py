@@ -26,6 +26,11 @@ def translate_text(text, target_language):
         "target_lang": target_language
     }
     response = requests.post(url, headers=headers, data=data)
+    
+    # Log the entire response for debugging
+    st.write(f"API Response Status Code: {response.status_code}")
+    st.write(f"API Response Content: {response.content}")
+
     if response.status_code != 200:
         st.error("Error in translation API call.")
         return text
