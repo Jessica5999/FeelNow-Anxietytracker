@@ -1,21 +1,19 @@
 import streamlit as st
-from github_contents import GithubContents
-import deepl
+from googletrans import Translator
 
-# Initialize GithubContents and DeepL Translator
-github = GithubContents(
-    st.secrets["github"]["owner"],
-    st.secrets["github"]["repo"],
-    st.secrets["github"]["token"]
-)
-translator = deepl.Translator(st.secrets["deepl"]["api_key"])
+# Initialize the translator
+translator = Translator()
 
 # Function to translate text
 def translate_text(text, dest_language):
     if dest_language == "en":
         return text
-    translation = translator.translate_text(text, target_lang=dest_language.upper())
-    return translation.text
+    try:
+        translation = translator.translate(text, dest=dest_language)
+        return translation.text
+    except Exception as e:
+        st.error(f"Translation error: {e}")
+        return text
 
 # Function to show main page with dynamic content
 def show_main_page(language):
@@ -30,7 +28,7 @@ def show_main_page(language):
         FeelNow is an app with which you can easily assess and monitor an acute panic attack. It is just like a diary and helps you to keep an eye on your mental health.
         
         ## What can the App do
-        The app is supposed to help you write down important parts of a panic attack or even simply for your anxiety. It simplifies takeing notes while feeling distressed by having the option to just choose how you're feeling instead of having to write your feelings down yourself.
+        The app is supposed to help you write down important parts of a panic attack or even simply for your anxiety. It simplifies taking notes while feeling distressed by having the option to just choose how you're feeling instead of having to write your feelings down yourself.
         
         ## How do I use it
         You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
@@ -39,7 +37,7 @@ def show_main_page(language):
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(translate_text("Login/Register", language)):
-            st.switch_page("pages/login.py")
+            st.write("Redirecting to login/register page...")  # Placeholder for page switch logic
 
 # Function to handle language selection
 def select_language():
