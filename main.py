@@ -66,8 +66,12 @@ def load_translations():
     for lang in languages.keys():
         if lang != "en":
             for key in translations["en"].keys():
-                translations[lang] = translations.get(lang, {})
-                translations[lang][key] = translate_text(translations["en"][key], src="en", dest=lang)
+                if "FeelNow" not in translations["en"][key]:
+                    translations[lang] = translations.get(lang, {})
+                    translations[lang][key] = translate_text(translations["en"][key], src="en", dest=lang)
+                else:
+                    translations[lang] = translations.get(lang, {})
+                    translations[lang][key] = translations["en"][key]
 
 # Load translations at startup
 load_translations()
@@ -86,14 +90,25 @@ def main_page(lang):
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(get_translation("login_button", lang)):
-            st.success(get_translation("login_button", lang))
+            st.experimental_rerun()
+
+def switch_page(page_name):
+    if page_name == "pages/login.py":
+        st.session_state['current_page'] = page_name
 
 # Main function
 def main():
+    if 'current_page' not in st.session_state:
+        st.session_state['current_page'] = "main"
+
     st.sidebar.title("Language Selection")
     lang = st.sidebar.selectbox("Choose Language", options=list(languages.keys()), format_func=lambda x: languages[x])
 
-    main_page(lang)
+    if st.session_state['current_page'] == "main":
+        main_page(lang)
+    elif st.session_state['current_page'] == "pages/login.py":
+        st.write("Redirecting to login page...")
+        st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
