@@ -47,9 +47,13 @@ languages = {
 
 # Function to translate text except for the word "FeelNow"
 def translate_text(text, src, dest):
-    text_parts = text.split("FeelNow")
-    translated_parts = [translator.translate(part, src=src, dest=dest).text for part in text_parts]
-    return "FeelNow".join(translated_parts)
+    try:
+        text_parts = text.split("FeelNow")
+        translated_parts = [translator.translate(part, src=src, dest=dest).text for part in text_parts]
+        return "FeelNow".join(translated_parts)
+    except Exception as e:
+        st.error(f"Error translating text: {e}")
+        return text
 
 # Function to get translated text
 def get_translation(key, lang):
@@ -88,6 +92,7 @@ def main_page(lang):
 def switch_page(page_name):
     if page_name == "pages/login.py":
         st.session_state['current_page'] = page_name
+        st.experimental_rerun()
 
 # Main function
 def main():
