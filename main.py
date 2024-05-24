@@ -59,8 +59,9 @@ language = st.sidebar.selectbox("Select Language", ("English", "Deutsch"))
 # Map selected language to dictionary key
 lang_key = "en" if language == "English" else "de"
 
-def show():
-    st.title(translations[lang_key]["title"])
+# Initialize session state
+if 'page' not in st.session_state:
+    st.session_state.page = 'main'
 
 def main_page():
     st.image("Logo.jpeg", width=600)
@@ -76,11 +77,16 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button(translations[lang_key]["login_register"]):
-            switch_page("pages/login.py")
+            st.session_state.page = 'login'
 
-def switch_page(page_name):
-    st.success("Redirecting to {} page...".format(page_name))
-    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
+def login_page():
+    st.title("Login Page")
+    # Add your login logic here
+    if st.button("Back to Main"):
+        st.session_state.page = 'main'
 
-if __name__ == "__main__":
+# Page switcher
+if st.session_state.page == 'main':
     main_page()
+elif st.session_state.page == 'login':
+    login_page()
