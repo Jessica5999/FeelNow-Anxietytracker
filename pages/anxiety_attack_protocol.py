@@ -5,29 +5,6 @@ import bcrypt
 from github_contents import GithubContents
 import datetime
 import pytz  # For timezone handling
-from googletrans import Translator
-from main import translate_content, get_content  # Import the functions from the main script
-
-# Initialize Translator
-translator = Translator()
-
-# Get language from session state
-language = st.session_state.get('language', 'en')
-
-# Get and translate content
-content = get_content()
-translated_content = translate_content(content, language)
-
-# Define the login page
-def login_page():
-    st.title("Login Page")
-    st.write(translated_content["title"])
-    # Add more login page specific content and translations here
-
-# Show login page with selected language
-if __name__ == "__main__":
-    login_page()
-
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
