@@ -17,19 +17,17 @@ def show():
     st.title("Main Page")
 
 def main_page():
-    st.image("Logo.jpeg", width=600)
-    st.subheader("Anxiety Tracker Journal")
-
-    languages = {
-        "English": "en",
-        "German": "de",
-        "Spanish": "es",
-        "French": "fr",
-        "Chinese": "zh-cn"
-    }
-
     col1, col2 = st.columns([0.8, 0.2])
+    with col1:
+        st.image("Logo.jpeg", width=600)
     with col2:
+        languages = {
+            "English": "en",
+            "German": "de",
+            "Spanish": "es",
+            "French": "fr",
+            "Chinese": "zh-cn"
+        }
         selected_language = st.selectbox("Select Language", list(languages.keys()))
         target_language = languages[selected_language]
 
@@ -51,6 +49,7 @@ def main_page():
     translated_text = translate_text(original_text, target_language)
     st.write(translated_text)
 
+    col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
             st.switch_page("pages/login.py")
