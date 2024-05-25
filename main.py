@@ -17,19 +17,19 @@ def show():
     st.title("Main Page")
 
 def main_page():
-    col1, col2 = st.columns([0.8, 0.2])
-    with col1:
-        st.image("Logo.jpeg", width=600)
-    with col2:
-        languages = {
-            "English": "en",
-            "German": "de",
-            "Spanish": "es",
-            "French": "fr",
-            "Chinese": "zh-cn"
-        }
-        selected_language = st.selectbox("Select Language", list(languages.keys()))
-        target_language = languages[selected_language]
+    st.image("Logo.jpeg", width=600)
+    st.subheader("Anxiety Tracker Journal")
+
+    languages = {
+        "English": "en",
+        "German": "de",
+        "Spanish": "es",
+        "French": "fr",
+        "Chinese": "zh-cn"
+    }
+
+    selected_language = st.selectbox("Select Language", list(languages.keys()))
+    target_language = languages[selected_language]
 
     original_text = """
         Welcome to FeelNow, your anxiety attack journal.
