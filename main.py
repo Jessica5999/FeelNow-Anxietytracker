@@ -20,17 +20,20 @@ def main_page():
     st.image("Logo.jpeg", width=600)
     st.subheader("Anxiety Tracker Journal")
 
-    languages = {
-        "English": "en",
-        "German": "de",
-        "Spanish": "es",
-        "French": "fr",
-        "Chinese": "zh-cn"
-    }
+    # Create three columns with the first two taking up most of the space and the last one for the selectbox
+    col1, col2, col3 = st.columns([0.8, 0.1, 0.1])
+    
+    with col3:
+        languages = {
+            "English": "en",
+            "German": "de",
+            "Spanish": "es",
+            "French": "fr",
+            "Chinese": "zh-cn"
+        }
 
-    # Add language selection to the sidebar
-    selected_language = st.sidebar.selectbox("Select Language", list(languages.keys()))
-    target_language = languages[selected_language]
+        selected_language = st.selectbox("Select Language", list(languages.keys()))
+        target_language = languages[selected_language]
 
     original_text = """
         Welcome to FeelNow, your anxiety attack journal.
@@ -53,11 +56,11 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
-            switch_page("pages/login.py")
+            st.switch_page("pages/login.py")
 
 def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
-    # Add logic here to navigate to the specified page
+    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
 
 if __name__ == "__main__":
     main_page()
