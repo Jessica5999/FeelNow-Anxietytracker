@@ -17,10 +17,10 @@ def show():
     st.title("Main Page")
 
 def main_page():
-    col1, col2, col3 = st.columns([0.7, 0.05, 0.25])
+    col1, col2 = st.columns([0.8, 0.2])
     with col1:
         st.image("Logo.jpeg", width=600)
-    with col3:
+    with col2:
         languages = {
             "English": "en",
             "German": "de",
