@@ -28,7 +28,8 @@ def main_page():
         "Chinese": "zh-cn"
     }
 
-    selected_language = st.selectbox("Select Language", list(languages.keys()))
+    # Add language selection to the sidebar
+    selected_language = st.sidebar.selectbox("Select Language", list(languages.keys()))
     target_language = languages[selected_language]
 
     original_text = """
@@ -52,11 +53,11 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
-            st.switch_page("pages/login.py")
+            switch_page("pages/login.py")
 
 def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
-    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
+    # Add logic here to navigate to the specified page
 
 if __name__ == "__main__":
     main_page()
