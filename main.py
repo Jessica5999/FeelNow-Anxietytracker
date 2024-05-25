@@ -28,6 +28,11 @@ def main_page():
         "Chinese": "zh-cn"
     }
 
+    col1, col2 = st.columns([0.8, 0.2])
+    with col2:
+        selected_language = st.selectbox("Select Language", list(languages.keys()))
+        target_language = languages[selected_language]
+
     original_text = """
         Welcome to FeelNow, your anxiety attack journal.
         This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
@@ -43,34 +48,12 @@ def main_page():
         You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
     """
 
-    # Create a placeholder for the language selection button
-    language_placeholder = st.empty()
-
-    # Translate the text
-    selected_language = language_placeholder.selectbox("Select Language", list(languages.keys()), key="language_select")
-    target_language = languages[selected_language]
     translated_text = translate_text(original_text, target_language)
-    
     st.write(translated_text)
 
-    col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
             st.switch_page("pages/login.py")
-
-    # Use CSS to position the language selection button
-    st.markdown(
-        """
-        <style>
-        .stSelectbox {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
 def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
