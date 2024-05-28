@@ -64,7 +64,7 @@ You can create your own login by registering. You will then have a list of impor
             st.session_state.page = "login"
 
 def switch_page(page_name):
-    st.success("Redirecting to {login.py} ".format(login.py))
+    st.success("Redirecting to {} page...".format(page_name))
     # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
 
 if __name__ == "__main__":
