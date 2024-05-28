@@ -30,6 +30,7 @@ def main_page():
         "German": "de",
         "Spanish": "es",
         "French": "fr",
+        "Chinese": "zh-cn"
     }
 
     # Language selection
@@ -54,7 +55,7 @@ def main_page():
 
     # Translate the text
     translated_text = translate_text(original_text, target_language)
-    st.markdown(translated_text)  # Use markdown to render the translated text in the same format
+    st.markdown(translated_text, unsafe_allow_html=True)  # Render the translated text as raw HTML
 
     # Login/Register button
     col1, col2 = st.columns([0.8, 0.2])
