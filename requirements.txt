@@ -3,7 +3,7 @@ pandas
 bcrypt
 googletrans==4.0.0-rc1
 translate
-pip install deep-translator
+deep-translator
 
 
 
