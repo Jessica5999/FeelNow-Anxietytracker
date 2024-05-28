@@ -15,10 +15,6 @@ def translate_text(text, target_language):
     translation = translator.translate(text)  # Translate the text
     return translation
 
-# Function to display the main page
-def show():
-    st.title("Main Page")
-
 # Function to display the main page content
 def main_page():
     st.image("Logo.jpeg", width=600)
@@ -61,10 +57,14 @@ You can create your own login by registering. You will then have a list of impor
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
-            st.session_state.page = "login"
-
-def switch_page(page_name):
-    st.success("Redirecting to {} page...".format(page_name))
-    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
+            st.experimental_set_query_params(page="login")
 
 if __name__ == "__main__":
+    query_params = st.experimental_get_query_params()
+    page = query_params.get("page", ["main"])[0]
+
+    if page == "main":
+        main_page()
+    elif page == "login":
+        import login
+        login.show_login_page()
