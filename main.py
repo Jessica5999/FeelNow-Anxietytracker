@@ -1,25 +1,30 @@
 import streamlit as st
 from github_contents import GithubContents
-from googletrans import Translator
+from translate import Translator  # Import the Translator class from the translate library
 
+# Initialize the GithubContents object
 github = GithubContents(
     st.secrets["github"]["owner"],
     st.secrets["github"]["repo"],
-    st.secrets["github"]["token"])
+    st.secrets["github"]["token"]
+)
 
-translator = Translator()
-
+# Function to translate text using the translate library
 def translate_text(text, target_language):
-    translation = translator.translate(text, dest=target_language)
-    return translation.text
+    translator = Translator(to_lang=target_language)  # Initialize the Translator object
+    translation = translator.translate(text)  # Translate the text
+    return translation
 
+# Function to display the main page
 def show():
     st.title("Main Page")
 
+# Function to display the main page content
 def main_page():
     st.image("Logo.jpeg", width=600)
     st.subheader("Anxiety Tracker Journal")
 
+    # Supported languages
     languages = {
         "English": "en",
         "German": "de",
@@ -28,9 +33,11 @@ def main_page():
         "Chinese": "zh-cn"
     }
 
+    # Language selection
     selected_language = st.selectbox("Select Language", list(languages.keys()))
     target_language = languages[selected_language]
 
+    # Original text
     original_text = """
         Welcome to FeelNow, your anxiety attack journal.
         This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
@@ -46,17 +53,21 @@ def main_page():
         You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
     """
 
+    # Translate the text
     translated_text = translate_text(original_text, target_language)
     st.write(translated_text)
 
+    # Login/Register button
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
             st.switch_page("pages/login.py")
 
+# Function to switch pages
 def switch_page(page_name):
     st.success("Redirecting to {} page...".format(page_name))
-    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
+    # Add logic to navigate to the specified page
 
+# Main function
 if __name__ == "__main__":
     main_page()
