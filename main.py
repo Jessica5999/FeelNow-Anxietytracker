@@ -1,6 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-from translate import Translator  # Import the Translator class from the translate library
+from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
 
 # Initialize the GithubContents object
 github = GithubContents(
@@ -9,9 +9,9 @@ github = GithubContents(
     st.secrets["github"]["token"]
 )
 
-# Function to translate text using the translate library
+# Function to translate text using the deep_translator library
 def translate_text(text, target_language):
-    translator = Translator(to_lang=target_language)  # Initialize the Translator object
+    translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
     translation = translator.translate(text)  # Translate the text
     return translation
 
