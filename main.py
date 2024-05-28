@@ -63,23 +63,8 @@ You can create your own login by registering. You will then have a list of impor
         if st.button("Login/Register"):
             st.session_state.page = "login"
 
-# Function to display the login page
-def login_page():
-    st.subheader("Login Page")
-    # Add your login form and logic here
-
 def switch_page(page_name):
-    st.session_state.page = page_name
-
-# Initialize the session state page variable if it doesn't exist
-if 'page' not in st.session_state:
-    st.session_state.page = 'main'
-
-# Display the current page
-if st.session_state.page == 'main':
-    main_page()
-elif st.session_state.page == 'login':
-    login_page()
+    st.success("Redirecting to {} page...".format(page_name))
+    # Hier können Sie die Logik hinzufügen, um zur angegebenen Seite zu navigieren
 
 if __name__ == "__main__":
-    show()
