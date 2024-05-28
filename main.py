@@ -61,13 +61,17 @@ def main_page():
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
-            st.switch_page("pages/login.py")
+            st.session_state.page = "login"
 
 # Function to switch pages
-def switch_page(page_name):
-    st.success("Redirecting to {} page...".format(page_name))
-    # Add logic to navigate to the specified page
+def switch_page():
+    if 'page' in st.session_state and st.session_state.page == "login":
+        st.write("Redirecting to login page...")
+        # Implement actual page switching logic here
 
 # Main function
 if __name__ == "__main__":
-    main_page()
+    if 'page' not in st.session_state:
+        main_page()
+    else:
+        switch_page()
