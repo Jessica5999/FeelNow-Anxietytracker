@@ -1,22 +1,17 @@
 import streamlit as st
 import pandas as pd
 import bcrypt
-import binascii
 from github_contents import GithubContents
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
 DATA_COLUMNS = ['username', 'name', 'password']
 
-# Function to display the login/register page
-def show_login_page():
+def show():
     st.title("Login/Register")
 
-    options = st.selectbox("Select an option", ["Login", "Register"])
-    if options == "Login":
-        login_page()
-    elif options == "Register":
-        register_page()
+def Login():
+    st.image("Logo.jpeg", width=600)
 
 def login_page():
     """ Login an existing user. """
@@ -26,6 +21,7 @@ def login_page():
         password = st.text_input("Password", type="password")
         if st.form_submit_button("Login"):
             authenticate(username, password)
+            st.switch_page("pages/attack.py")
 
 def register_page():
     """ Register a new user. """
@@ -48,7 +44,7 @@ def register_page():
                 # Writes the updated dataframe to GitHub data repository
                 st.session_state.github.write_df(DATA_FILE, st.session_state.df_users, "added new user")
                 st.success("Registration successful! You can now log in.")
-                st.experimental_rerun()
+                st.switch_page("pages/attack.py")
 
 def authenticate(username, password):
     """
@@ -69,7 +65,7 @@ def authenticate(username, password):
             st.session_state['authentication'] = True
             st.session_state['username'] = username
             st.success('Login successful')
-            st.experimental_set_query_params(page="attack")
+            st.switch_page("pages/attack.py")
             st.experimental_rerun()
         else:
             st.error('Incorrect password')
@@ -100,14 +96,23 @@ def main():
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
 
-    query_params = st.experimental_get_query_params()
-    page = query_params.get("page", ["login"])[0]
+    if not st.session_state['authentication']:
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
+        if options == "Login":
+            login_page()
+        elif options == "Register":
+            register_page()
+    else:
+        logout_button = st.button("Logout")
+        if logout_button:
+            st.session_state['authentication'] = False
+            st.experimental_rerun()
 
-    if page == "login":
-        show_login_page()
-    elif page == "attack":
-        # Import and show the attack page
-        pass
+def switch_page(page_name):
+    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
+    time.sleep(3)
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
