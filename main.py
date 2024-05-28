@@ -69,7 +69,4 @@ def switch_page(page_name):
 
 # Main function
 if __name__ == "__main__":
-    if 'page' not in st.session_state:
-        main_page()
-    else:
-        switch_page()
+    main_page()
