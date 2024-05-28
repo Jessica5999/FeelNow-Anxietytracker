@@ -55,7 +55,7 @@ def main_page():
 
     # Translate the text
     translated_text = translate_text(original_text, target_language)
-    st.write(translated_text)
+    st.markdown(translated_text)  # Use markdown to render the translated text in the same format
 
     # Login/Register button
     col1, col2 = st.columns([0.8, 0.2])
