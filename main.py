@@ -30,7 +30,6 @@ def main_page():
         "German": "de",
         "Spanish": "es",
         "French": "fr",
-        "Chinese": "zh-cn"
     }
 
     # Language selection
