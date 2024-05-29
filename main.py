@@ -43,7 +43,11 @@ def main_page():
         "French": "fr",
         "Chinese": "zh-cn"
     }
-    
+
+    # Language selection
+    selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
+    target_language = languages[selected_language]
+
     original_text = """
     Welcome to FeelNow, your anxiety attack journal.
     This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
@@ -59,7 +63,7 @@ def main_page():
     You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
     """
 
-    target_language = "de"  # You can set the target language as per your requirement or user input
+    # Translate the text
     translated_text = translate_text(original_text, target_language)
     st.write(translated_text)
 
