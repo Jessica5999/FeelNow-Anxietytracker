@@ -1,6 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-from translation_utils import translate_text  # Import the translation function
+from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
 import time  # Ensure that you import the time module
 
 github = GithubContents(
@@ -24,6 +24,12 @@ def main_sidebar():
     elif mainpage:
         switch_page("main.py")
 
+# Function to translate text using the deep_translator library
+def translate_text(text, target_language):
+    translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
+    translation = translator.translate(text)  # Translate the text
+    return translation
+
 # Function to display the main page
 def main_page():
     st.image("Logo.jpeg", width=600)
@@ -40,7 +46,7 @@ def main_page():
 
     # Language selection
     selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
-    target_language = languages[selected_language]
+    st.session_state['target_language'] = languages[selected_language]
 
     original_text = (
         "Welcome to FeelNow, your anxiety attack journal. "
@@ -55,7 +61,7 @@ def main_page():
     )
 
     # Translate the text
-    translated_text = translate_text(original_text, target_language)
+    translated_text = translate_text(original_text, st.session_state['target_language'])
     st.write(translated_text)
 
     col1, col2 = st.columns([0.8, 0.2])
