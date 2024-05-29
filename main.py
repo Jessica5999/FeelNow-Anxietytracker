@@ -1,7 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from 
-the deep_translator library
+from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
 
 github = GithubContents(
     st.secrets["github"]["owner"],
