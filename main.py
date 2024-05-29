@@ -1,5 +1,7 @@
 import streamlit as st
 from github_contents import GithubContents
+from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from 
+the deep_translator library
 
 github = GithubContents(
     st.secrets["github"]["owner"],
@@ -22,10 +24,39 @@ def main_sidebar():
     elif mainpage:
         switch_page("main.py")
 
+# Function to translate text using the deep_translator library
+def translate_text(text, target_language):
+    translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
+    translation = translator.translate(text)  # Translate the text
+    return translation
+
+# Function to display the main page
+def show():
+    st.title("Main Page")
+
+    # Supported languages
+    languages = {
+        "English": "en",
+        "German": "de",
+        "Spanish": "es",
+        "French": "fr",
+        "Chinese": "zh-cn"
+    }
+
+
 def main_page():
     st.image("Logo.jpeg", width=600)
     st.subheader("Anxiety Tracker Journal")
-    st.write("""
+
+     # Supported languages
+    languages = {
+        "English": "en",
+        "German": "de",
+        "Spanish": "es",
+        "French": "fr",
+        "Chinese": "zh-cn"
+    }
+         orginal_text ="""
         Welcome to FeelNow, your anxiety attack journal.
         This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
         and feelings during anxiety attacks.
@@ -38,7 +69,11 @@ def main_page():
         
         ## How do I use it
         You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
-        """)
+        """
+
+# Translate the text
+    translated_text = translate_text(original_text, target_language)
+    st.write(translated_text)
 
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
