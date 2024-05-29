@@ -5,6 +5,7 @@ import time
 import pandas as pd
 from github_contents import GithubContents
 from PIL import Image
+from translation_utils import translate_text  # Import the translation function
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -45,9 +46,9 @@ def anxiety_assessment2():
     if st.button("Yes "):
         st.switch_page("pages/5_anxiety_protocol.py")
     elif st.button("No "):
-        st.markdown(gif_html, unsafe_allow_html=True)
         gif_url = "https://64.media.tumblr.com/28fad0005f6861c08f2c07697ff74aa4/tumblr_n4y0patw7Q1rn953bo1_500.gif"
         gif_html = f'<img src="{gif_url}" width="400" height="300">'
+        st.markdown(gif_html, unsafe_allow_html=True)
 
 def init_github():
     """Initialize the GithubContents object."""
@@ -126,6 +127,19 @@ def switch_page(page_name):
 def main():
     init_github()
     init_credentials()
+
+    # Supported languages
+    languages = {
+        "English": "en",
+        "German": "de",
+        "Spanish": "es",
+        "French": "fr",
+        "Chinese": "zh-cn"
+    }
+
+    # Language selection
+    selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()), index=0)
+    target_language = languages[selected_language]
 
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
