@@ -55,7 +55,7 @@ def main_page():
         "French": "fr",
         "Chinese": "zh-cn"
     }
-         orginal_text ="""
+        orginal_text = """
         Welcome to FeelNow, your anxiety attack journal.
         This app helps you track and manage your anxiety by providing a platform to journal your thoughts 
         and feelings during anxiety attacks.
