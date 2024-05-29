@@ -1,26 +1,37 @@
 import streamlit as st
 from github_contents import GithubContents
-from deep_translator import GoogleTranslator
-import time
+from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
+import time  # Ensure that you import the time module
 
-# Initialize GitHubContents
-def init_github():
-    if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
-            st.secrets["github"]["owner"],
-            st.secrets["github"]["repo"],
-            st.secrets["github"]["token"])
-        print("github initialized")
+github = GithubContents(
+    st.secrets["github"]["owner"],
+    st.secrets["github"]["repo"],
+    st.secrets["github"]["token"])
+
+def main_sidebar():
+    st.sidebar.title("Navigation")
+    profile = st.sidebar.checkbox("Profile")
+    anxiety_attack = st.sidebar.checkbox("Anxiety Attack")
+    anxiety = st.sidebar.checkbox("Anxiety")
+    mainpage = st.sidebar.checkbox("Mainpage")
+
+    if profile:
+        switch_page("pages/2_profile.py")
+    elif anxiety_attack:
+        switch_page("pages/4_anxiety_attack_protocol.py")
+    elif anxiety:
+        switch_page("pages/5_anxiety_protocol.py")
+    elif mainpage:
+        switch_page("main.py")
 
 # Function to translate text using the deep_translator library
 def translate_text(text, target_language):
-    translator = GoogleTranslator(target=target_language)
-    translation = translator.translate(text)
+    translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
+    translation = translator.translate(text)  # Translate the text
     return translation
 
 # Function to display the main page
 def main_page():
-    init_github()  # Initialize GitHubContents
     st.image("Logo.jpeg", width=600)
     st.subheader("Anxiety Tracker Journal")
 
@@ -35,7 +46,7 @@ def main_page():
 
     # Language selection
     selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
-    st.session_state['target_language'] = languages[selected_language]
+    target_language = languages[selected_language]
 
     original_text = (
         "Welcome to FeelNow, your anxiety attack journal. "
@@ -50,13 +61,13 @@ def main_page():
     )
 
     # Translate the text
-    translated_text = translate_text(original_text, st.session_state['target_language'])
+    translated_text = translate_text(original_text, target_language)
     st.write(translated_text)
 
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
         if st.button("Login/Register"):
-            switch_page("pages/1_login.py")
+            st.switch_page("pages/1_login.py")
 
 def switch_page(page_name):
     st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
