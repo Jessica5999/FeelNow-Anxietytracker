@@ -1,6 +1,6 @@
 import streamlit as st
 from github_contents import GithubContents
-from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
+from translation_utils import translate_text  # Import the translation function
 import time  # Ensure that you import the time module
 
 github = GithubContents(
@@ -23,12 +23,6 @@ def main_sidebar():
         switch_page("pages/5_anxiety_protocol.py")
     elif mainpage:
         switch_page("main.py")
-
-# Function to translate text using the deep_translator library
-def translate_text(text, target_language):
-    translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
-    translation = translator.translate(text)  # Translate the text
-    return translation
 
 # Function to display the main page
 def main_page():
