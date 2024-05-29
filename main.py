@@ -12,22 +12,6 @@ github = GithubContents(
     st.secrets["github"]["repo"],
     st.secrets["github"]["token"])
 
-def main_sidebar():
-    st.sidebar.title("Navigation")
-    profile = st.sidebar.checkbox("Profile")
-    anxiety_attack = st.sidebar.checkbox("Anxiety Attack")
-    anxiety = st.sidebar.checkbox("Anxiety")
-    mainpage = st.sidebar.checkbox("Mainpage")
-
-    if profile:
-        switch_page("pages/2_profile.py")
-    elif anxiety_attack:
-        switch_page("pages/4_anxiety_attack_protocol.py")
-    elif anxiety:
-        switch_page("pages/5_anxiety_protocol.py")
-    elif mainpage:
-        switch_page("main.py")
-
 # Function to translate text using the deep_translator library
 def translate_text(text, target_language):
     translator = GoogleTranslator(target=target_language)  # Initialize the GoogleTranslator object
