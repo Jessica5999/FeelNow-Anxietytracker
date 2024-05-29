@@ -34,15 +34,13 @@ def main():
             "French": "fr",
             "Chinese": "zh-cn"
         }
-        selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0, key="language_select")
+        selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
         st.session_state['target_language'] = languages[selected_language]
+    else:
+        st.write(translate_text("Language: ", st.session_state['target_language']) + st.session_state['target_language'])
 
     if not st.session_state['authentication']:
-        options = st.sidebar.radio(
-            translate_text("Select a page", st.session_state['target_language']),
-            [translate_text("Login", st.session_state['target_language']), translate_text("Register", st.session_state['target_language'])],
-            key="page_select"
-        )
+        options = st.sidebar.selectbox(translate_text("Select a page", st.session_state['target_language']), [translate_text("Login", st.session_state['target_language']), translate_text("Register", st.session_state['target_language'])])
         if options == translate_text("Login", st.session_state['target_language']):
             login_page()
         elif options == translate_text("Register", st.session_state['target_language']):
@@ -51,10 +49,12 @@ def main():
         st.sidebar.write(translate_text("Logged in as", st.session_state['target_language']) + f" {st.session_state['username']}")
         anxiety_attack_protocol()
 
-        if st.sidebar.button(translate_text("Logout", st.session_state['target_language'])):
+        logout_button = st.sidebar.button(translate_text("Logout", st.session_state['target_language']))
+        if logout_button:
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
             switch_page("main.py")
+            st.experimental_rerun()
 
 def anxiety_attack_protocol():
     username = st.session_state['username']
@@ -110,23 +110,13 @@ def anxiety_attack_protocol():
     new_symptom = st.text_input(translate_text("Add new symptom:", st.session_state['target_language']))
     if st.button(translate_text("Add Symptom", st.session_state['target_language'])) and new_symptom:
         st.session_state.symptoms.append(new_symptom)
-        st.experimental_rerun()
 
     for symptom in st.session_state.symptoms:
         st.write(symptom)
 
     # Question 4: Triggers
     st.subheader(translate_text("Triggers:", st.session_state['target_language']))
-    triggers = st.multiselect(translate_text("Select Triggers", st.session_state['target_language']), [
-        translate_text("Stress", st.session_state['target_language']),
-        translate_text("Caffeine", st.session_state['target_language']),
-        translate_text("Lack of Sleep", st.session_state['target_language']),
-        translate_text("Social Event", st.session_state['target_language']),
-        translate_text("Reminder of traumatic event", st.session_state['target_language']),
-        translate_text("Alcohol", st.session_state['target_language']),
-        translate_text("Conflict", st.session_state['target_language']),
-        translate_text("Family problems", st.session_state['target_language'])
-    ])
+    triggers = st.multiselect(translate_text("Select Triggers", st.session_state['target_language']), [translate_text("Stress", st.session_state['target_language']), translate_text("Caffeine", st.session_state['target_language']), translate_text("Lack of Sleep", st.session_state['target_language']), translate_text("Social Event", st.session_state['target_language']), translate_text("Reminder of traumatic event", st.session_state['target_language']), translate_text("Alcohol", st.session_state['target_language']), translate_text("Conflict", st.session_state['target_language']), translate_text("Family problems", st.session_state['target_language'])])
     
     if 'triggers' not in st.session_state:
         st.session_state.triggers = []
@@ -134,7 +124,6 @@ def anxiety_attack_protocol():
     new_trigger = st.text_input(translate_text("Add new trigger:", st.session_state['target_language']))
     if st.button(translate_text("Add Trigger", st.session_state['target_language'])) and new_trigger:
         st.session_state.triggers.append(new_trigger)
-        st.experimental_rerun()
 
     for trigger in st.session_state.triggers:
         st.write(trigger)
