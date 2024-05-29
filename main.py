@@ -30,18 +30,6 @@ def translate_text(text, target_language):
     return translation
 
 # Function to display the main page
-def show():
-    st.title("Main Page")
-
-    # Supported languages
-    languages = {
-        "English": "en",
-        "German": "de",
-        "Spanish": "es",
-        "French": "fr",
-        "Chinese": "zh-cn"
-    }
-
 
 def main_page():
     st.image("Logo.jpeg", width=600)
