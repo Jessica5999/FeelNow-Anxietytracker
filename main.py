@@ -63,11 +63,9 @@ def main_page():
     You can create your own login by registering. You will then have a list of important points to assess during an acute attack, such as symptoms, possible triggers, who helped you at that moment or how strongly you felt them. If you do not feel like you're having a panic attack but you do feel anxious, you can do the same in the simpler version.
     """
 
-    if target_language == "de":
-        translated_text = translate_text(original_text, target_language)
-        st.write(translated_text)
-    else:
-        st.code(original_text, language='text')
+    # Translate the text
+    translated_text = translate_text(original_text, target_language)
+    st.write(translated_text)
 
     col1, col2 = st.columns([0.8, 0.2])
     with col2:
