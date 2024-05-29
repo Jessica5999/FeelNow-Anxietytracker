@@ -3,6 +3,10 @@ from github_contents import GithubContents
 from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
 import time  # Ensure that you import the time module
 
+# Initialize session state if not already done
+if 'language' not in st.session_state:
+    st.session_state.language = "English"  # Default language
+
 github = GithubContents(
     st.secrets["github"]["owner"],
     st.secrets["github"]["repo"],
@@ -45,7 +49,8 @@ def main_page():
     }
 
     # Language selection
-    selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
+    selected_language = st.selectbox("Choose your language", list(languages.keys()), index=list(languages.keys()).index(st.session_state.language))
+    st.session_state.language = selected_language
     target_language = languages[selected_language]
 
     original_text = (
