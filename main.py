@@ -30,7 +30,7 @@ def main_page():
         "Spanish": "es",
         "French": "fr",
         "Italian": "it"
-        "Portuguese": "pt"
+        "Portuguese": "por"
     }
 
     # Language selection
