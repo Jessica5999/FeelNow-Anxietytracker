@@ -4,8 +4,6 @@ import binascii
 import datetime
 from github_contents import GithubContents
 import pandas as pd
-from translation_utils import translate_text  # Import the translation function
-import time  # Ensure that you import the time module
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -111,20 +109,7 @@ def authenticate(username, password):
 def main():
     init_github()
     init_credentials()
-
-    # Supported languages
-    languages = {
-        "English": "en",
-        "German": "de",
-        "Spanish": "es",
-        "French": "fr",
-        "Chinese": "zh-cn"
-    }
-
-    # Language selection
-    selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()), index=0)
-    target_language = languages[selected_language]
-
+    
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
 
