@@ -7,13 +7,11 @@ import pandas as pd
 from github_contents import GithubContents
 from deep_translator import GoogleTranslator
 import time
-from functools import lru_cache
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
 DATA_COLUMNS = ['username', 'name', 'password']
 
-@lru_cache(maxsize=128)
 def translate_text(text, target_language):
     """Translate text using the deep_translator library."""
     translator = GoogleTranslator(target=target_language)
