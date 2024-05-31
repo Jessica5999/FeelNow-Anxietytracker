@@ -167,4 +167,51 @@ def get_symptoms():
         symptoms.append(st.checkbox(translate_text("Numb Hands", st.session_state['target_language'])))
         symptoms.append(st.checkbox(translate_text("Numbness", st.session_state['target_language'])))
         symptoms.append(st.checkbox(translate_text("Palpitations", st.session_state['target_language'])))
-       
+        symptoms.append(st.checkbox(translate_text("Shortness of Breath", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Sweating", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Tense Muscles", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Tingly Hands", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Trembling", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Tremor", st.session_state['target_language'])))
+        symptoms.append(st.checkbox(translate_text("Weakness", st.session_state['target_language'])))
+    return symptoms
+
+def get_triggers():
+    triggers = st.multiselect(translate_text("Select Triggers", st.session_state['target_language']), [
+        translate_text("Stress", st.session_state['target_language']),
+        translate_text("Caffeine", st.session_state['target_language']),
+        translate_text("Lack of Sleep", st.session_state['target_language']),
+        translate_text("Social Event", st.session_state['target_language']),
+        translate_text("Reminder of traumatic event", st.session_state['target_language']),
+        translate_text("Alcohol", st.session_state['target_language']),
+        translate_text("Conflict", st.session_state['target_language']),
+        translate_text("Family problems", st.session_state['target_language'])
+    ])
+    new_trigger = st.text_input(translate_text("Add new trigger:", st.session_state['target_language']))
+    if st.button(translate_text("Add Trigger", st.session_state['target_language'])) and new_trigger:
+        triggers.append(new_trigger)
+    return triggers
+
+def add_time_severity():
+    if 'time_severity_entries' not in st.session_state:
+        st.session_state.time_severity_entries = []
+    st.subheader(translate_text("Time & Severity", st.session_state['target_language']))
+    current_time = datetime.datetime.now(pytz.timezone('Europe/Zurich')).strftime('%H:%M')
+    st.write(translate_text(f"Current Time: {current_time}", st.session_state['target_language']))
+    with st.form(key='severity_form'):
+        severity = st.slider(translate_text("Severity (1-10)", st.session_state['target_language']), min_value=1, max_value=10)
+        if st.form_submit_button(translate_text("Add Severity", st.session_state['target_language'])):
+            new_entry = {'time': current_time, 'severity': severity}
+            st.session_state.time_severity_entries.append(new_entry)
+            st.success(translate_text(f"Added entry: Time: {current_time}, Severity: {severity}", st.session_state['target_language']))
+    for entry in st.session_state.time_severity_entries:
+        st.write(translate_text(f"Time: {entry['time']}, Severity: {entry['severity']}", st.session_state['target_language']))
+
+def switch_page(page_name):
+    st.success(translate_text(f"Redirecting to {page_name.replace('_', ' ')} page...", st.session_state['target_language']))
+    time.sleep(3)
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
+
+if __name__ == "__main__":
+    main()
