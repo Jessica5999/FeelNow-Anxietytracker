@@ -141,9 +141,6 @@ def main():
         languages = {
             "English": "en",
             "German": "de",
-            "Spanish": "es",
-            "French": "fr",
-            "Chinese": "zh-cn"
         }
         selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
         st.session_state['target_language'] = languages[selected_language]
