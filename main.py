@@ -39,9 +39,6 @@ def main_page():
     languages = {
         "English": "en",
         "German": "de",
-        "Spanish": "es",
-        "French": "fr",
-        "Chinese": "zh-cn"
     }
 
     # Language selection
