@@ -8,7 +8,7 @@ Version 4: Wir haben ein Protokoll, dass auch bei normaler Angst ausgefüllt wer
 Version 5: Logo wurde eingefügt
 Version 6: Die nutzerspezifische Nutzerspeicherung funktioniert noch nicht ganz korrekt.
 Version 7: Eine Übersetzungs API wurde gesucht und nach einigen Problemen (wie in der Reflexion beschrieben) gefunden.
-Version 8: Die Funktion einen Emergency number einzutragen und von der App aus anzurufen
+Version 8: Die Funktion eine Emergency number einzutragen und von der App aus anzurufen
 
 
 Probleme:
