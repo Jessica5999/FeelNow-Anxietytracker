@@ -31,6 +31,7 @@ def main():
         if logout_button:
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
+            st.switch_page("Main.py")
             st.experimental_rerun()
 
 def anxiety_attack_protocol():
@@ -69,7 +70,7 @@ def anxiety_attack_protocol():
             'Triggers': triggers,
             'Help': help_response
         }
-        
+        st.switch_page("pages/3_Profile.py")
         # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
         
@@ -82,10 +83,6 @@ def anxiety_attack_protocol():
 
         # Clear the severity entries after saving
         st.session_state.time_severity_entries = []
-
-    # Display saved entries
-    st.subheader("Saved Entries")
-    st.write(st.session_state.data)
 
 def add_time_severity():
     if 'time_severity_entries' not in st.session_state:
@@ -239,6 +236,12 @@ def authenticate(username, password):
             st.error('Incorrect password')
     else:
         st.error('Username not found')
+
+def switch_page(page_name):
+    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
+    time.sleep(3)
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
