@@ -40,14 +40,38 @@ def anxiety_assessment():
     if st.button("No"):
         anxiety_assessment2()
 
-def anxiety_assessment2():
-    st.write("Are you anxious right now?")
-    if st.button("Yes "):
-        st.switch_page("pages/5_anxiety_protocol.py")
-    elif st.button("No "):
-        st.markdown(gif_html, unsafe_allow_html=True)
-        gif_url = "https://64.media.tumblr.com/28fad0005f6861c08f2c07697ff74aa4/tumblr_n4y0patw7Q1rn953bo1_500.gif"
-        gif_html = f'<img src="{gif_url}" width="400" height="300">'
+def anxiety_assessment():
+    st.title("Anxiety Assessment")
+    
+    if "step" not in st.session_state:
+        st.session_state.step = 1
+
+    if st.session_state.step == 1:
+        st.write("### Do you feel like you're having an Anxiety Attack right now?")
+        if st.button("Yes"):
+            st.switch_page("pages/4_Anxiety_Attack_Protocol.py")
+        if st.button("No"):
+            st.session_state.step = 2
+            st.experimental_rerun()
+
+    if st.session_state.step == 2:
+        st.write("### Are you anxious right now?")
+        if st.button("Yes"):
+            st.switch_page("pages/5_Anxiety_Protocol.py")
+        if st.button("No"):
+            st.session_state.step = 3
+            st.experimental_rerun()
+
+    if st.session_state.step == 3:
+        show_gif()
+        if st.button("Reassess your feelings"):
+            st.session_state.step = 1
+            st.experimental_rerun()
+
+def show_gif():
+    gif_url = "https://64.media.tumblr.com/28fad0005f6861c08f2c07697ff74aa4/tumblr_n4y0patw7Q1rn953bo1_500.gif"
+    gif_html = f'<img src="{gif_url}" style="width:100%;">'
+    st.markdown(gif_html, unsafe_allow_html=True)
 
 def init_github():
     """Initialize the GithubContents object."""
