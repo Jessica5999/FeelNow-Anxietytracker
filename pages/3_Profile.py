@@ -307,13 +307,13 @@ def german_protocols():
     st.title("German Protocols")
     st.subheader("Anxiety Attack Protocol")
     st.write("Click on the button to download the german version.")
-    st.write("Um die Deutsche PDF version des 'Anxiety Attack Protocol' herunterzuladen, auf 'Download Panickattacke Protokoll' klicken.")
-    with open("Panickattacke Protokoll.pdf", "rb") as pdf_file:
+    st.write("Um die Deutsche PDF version des 'Anxiety Attack Protocol' herunterzuladen, auf 'Download Panikattacke Protokoll' klicken.")
+    with open("Panikattacke Protokoll.pdf", "rb") as pdf_file:
         pdf_bytes = pdf_file.read()
         st.download_button(
-            label="Download Panickattacke Protokoll",
+            label="Download Panikattacke Protokoll",
             data=pdf_bytes,
-            file_name="Panickattacke Protokoll.pdf",
+            file_name="Panikattacke Protokoll.pdf",
             mime="application/pdf",
             key="download_panic_protocol"
         )
