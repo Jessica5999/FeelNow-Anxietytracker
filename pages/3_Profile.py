@@ -30,7 +30,7 @@ def main_page():
     else:
         st.error("User not logged in.")
         if st.button("Login/Register"):
-            st.switch_page("pages/1_login.py")
+            st.switch_page("pages/2_Login.py")
 
 def anxiety_assessment():
     st.subheader("Anxiety Assessment:")
@@ -68,6 +68,9 @@ def init_credentials():
 
 def login_page():
     """ Login an existing user. """
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
     st.title("Login")
     with st.form(key='login_form'):
         username = st.text_input("Username")
@@ -75,10 +78,13 @@ def login_page():
         if st.form_submit_button("Login"):
             authenticate(username, password)
             if st.session_state['authentication']:
-                st.switch_page("pages/2_profile.py")
+                st.switch_page("pages/3_Profile.py")
 
 def register_page():
     """ Register a new user. """
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
     st.title("Register")
     with st.form(key='register_form'):
         new_username = st.text_input("New Username")
@@ -143,7 +149,7 @@ def main():
         if st.sidebar.button("Logout"):
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
-            st.switch_page("main.py")
+            st.switch_page("Main.py")
 
 if __name__ == "__main__":
     main()
