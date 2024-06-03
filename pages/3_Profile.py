@@ -1,12 +1,11 @@
 import streamlit as st
+import pandas as pd
 import binascii
 import bcrypt
-import time
-import pandas as pd
-from github_contents import GithubContents
-from PIL import Image
 import datetime
 import phonenumbers
+from github_contents import GithubContents
+from PIL import Image
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -28,26 +27,13 @@ def init_credentials():
             st.session_state.df_users = st.session_state.github.read_df(DATA_FILE)
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
+            
         # Ensure phone number columns are treated as strings
         st.session_state.df_users['emergency_contact_number'] = st.session_state.df_users['emergency_contact_number'].astype(str)
 
-def login_page():
-    """ Login an existing user. """
-    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
-    st.image(logo_path, use_column_width=True)
-    st.write("---")
-    st.title("Login")
-    with st.form(key='login_form'):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.form_submit_button("Login"):
-            authenticate(username, password)
-            if st.session_state['authentication']:
-                st.switch_page("pages/3_Profile.py")
-
 def register_page():
     """ Register a new user. """
-    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    logo_path = "Logo.jpeg"
     st.image(logo_path, use_column_width=True)
     st.write("---")
     st.title("Register")
@@ -63,6 +49,7 @@ def register_page():
         new_emergency_contact_name = st.text_input("Emergengy Contact Name")
         new_emergency_contact_number = st.text_input("Emergency Contact Number")
         new_password = st.text_input("New Password", type="password")
+        
         if st.form_submit_button("Register"):
             hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt())
             hashed_password_hex = binascii.hexlify(hashed_password).decode()
@@ -76,8 +63,28 @@ def register_page():
                 st.session_state.github.write_df(DATA_FILE, st.session_state.df_users, "added new user")
                 st.success("Registration successful! You can now log in.")
 
+def login_page():
+    """ Login an existing user. """
+    logo_path = "Logo.jpeg"
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
+    st.title("Login")
+    with st.form(key='login_form'):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.form_submit_button("Login"):
+            authenticate(username, password)
+            if st.session_state['authentication']:
+                st.switch_page("pages/3_Profile.py")
+
 def authenticate(username, password):
-    """ Authenticate the user. """
+    """
+    Authenticate the user.
+
+    Parameters:
+    username (str): The username to authenticate.
+    password (str): The password to authenticate.
+    """
     login_df = st.session_state.df_users
     login_df['username'] = login_df['username'].astype(str)
 
@@ -95,8 +102,53 @@ def authenticate(username, password):
     else:
         st.error('Username not found')
 
+def switch_page(page_name):
+    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
+    st.experimental_set_query_params(page=page_name)
+    time.sleep(3)
+    st.experimental_rerun()
+
+def main():
+    init_github()
+    init_credentials()
+
+    if 'authentication' not in st.session_state:
+        st.session_state['authentication'] = False
+
+    if not st.session_state['authentication']:
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
+        st.sidebar.write("_Please reload Website if you just logged out_")
+        if options == "Login":
+            login_page()
+        elif options == "Register":
+            register_page()
+    else:
+        st.sidebar.write(f"Logged in as {st.session_state['username']}")
+        # Retrieve the emergency contact information from the DataFrame
+        user_data = st.session_state.df_users.loc[st.session_state.df_users['username'] == st.session_state['username']]
+        if not user_data.empty:
+            st.session_state['emergency_contact_name'] = user_data['emergency_contact_name'].iloc[0] if 'emergency_contact_name' in user_data.columns else ''
+            st.session_state['emergency_contact_number'] = user_data['emergency_contact_number'].iloc[0] if 'emergency_contact_number' in user_data.columns else ''
+
+        main_page()
+        st.write("---")
+        anxiety_assessment()
+        st.write("---")
+        german_protocols()
+        st.write("---")
+        show_saved_entries()
+        
+        if st.sidebar.button("Logout"):
+            st.session_state['authentication'] = False
+            st.session_state.pop('username', None)
+            st.switch_page("Main.py")
+            
+        st.sidebar.write("_Please reload Website after logging out_")
+    
+        display_emergency_contact()
+
 def main_page():
-    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    logo_path = "Logo.jpeg"
     st.image(logo_path, use_column_width=True)
     st.write("---")
     st.title("Your Anxiety Tracker Journal")
@@ -112,6 +164,7 @@ def main_page():
             if 'edit_profile' not in st.session_state:
                 st.session_state.edit_profile = False
 
+            # To permit the edditing of users profile and saving the eddited information to dataframe
             if st.session_state.edit_profile:
                 col1, col2 = st.columns(2)
                 with col1:
@@ -156,6 +209,7 @@ def main_page():
                 if st.button("Cancel"):
                     st.session_state.edit_profile = False
                     st.experimental_rerun()
+                    
             else:
                 col1, col2 = st.columns(2)
                 with col1:
@@ -194,6 +248,7 @@ def format_phone_number(number):
             return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
         else:
             return number_str  # Return the original number if invalid
+            
     except phonenumbers.NumberParseException:
         return number_str  # Return the original number if parsing fails
 
@@ -217,7 +272,6 @@ def display_emergency_contact():
 
 def anxiety_assessment():
     st.title("Anxiety Assessment")
-    
     if "step" not in st.session_state:
         st.session_state.step = 1
 
@@ -247,27 +301,9 @@ def show_gif():
     gif_url = "https://64.media.tumblr.com/28fad0005f6861c08f2c07697ff74aa4/tumblr_n4y0patw7Q1rn953bo1_500.gif"
     gif_html = f'<img src="{gif_url}" style="width:100%;">'
     st.markdown(gif_html, unsafe_allow_html=True)
-    
-def show_saved_entries():
-    st.subheader("Saved Entries from Anxiety Attack Protocol")
-    username = st.session_state['username']
-    data_file_attack = f"{username}_anxiety_attack_data.csv"
-    data_file_anxiety = f"{username}_anxiety_protocol_data.csv"
-    
-    if st.session_state.github.file_exists(data_file_attack):
-        anxiety_attack_data = st.session_state.github.read_df(data_file_attack)
-        st.write(anxiety_attack_data)
-    else:
-        st.write("No saved entries from Anxiety Attack Protocol.")
-    
-    st.subheader("Saved Entries from Anxiety Protocol")
-    if st.session_state.github.file_exists(data_file_anxiety):
-        anxiety_protocol_data = st.session_state.github.read_df(data_file_anxiety)
-        st.write(anxiety_protocol_data)
-    else:
-        st.write("No saved entries from Anxiety Protocol.")
 
 def german_protocols():
+    """Possibility to download the protocols in German, if needed for non-English speakers."""
     st.title("German Protocols")
     st.subheader("Anxiety Attack Protocol")
     st.write("Click on the button to download the german version.")
@@ -295,49 +331,25 @@ def german_protocols():
             key="download_anxiety_protocol"
         )
 
-def switch_page(page_name):
-    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
-    st.experimental_set_query_params(page=page_name)
-    time.sleep(3)
-    st.experimental_rerun()
-
-def main():
-    init_github()
-    init_credentials()
-
-    if 'authentication' not in st.session_state:
-        st.session_state['authentication'] = False
-
-    if not st.session_state['authentication']:
-        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
-        if options == "Login":
-            login_page()
-        elif options == "Register":
-            register_page()
-    else:
-        st.sidebar.write(f"Logged in as {st.session_state['username']}")
-        # Retrieve the emergency contact information from the DataFrame
-        user_data = st.session_state.df_users.loc[st.session_state.df_users['username'] == st.session_state['username']]
-        if not user_data.empty:
-            st.session_state['emergency_contact_name'] = user_data['emergency_contact_name'].iloc[0] if 'emergency_contact_name' in user_data.columns else ''
-            st.session_state['emergency_contact_number'] = user_data['emergency_contact_number'].iloc[0] if 'emergency_contact_number' in user_data.columns else ''
-
-        main_page()
-        st.write("---")
-        anxiety_assessment()
-        st.write("---")
-        german_protocols()
-        st.write("---")
-        show_saved_entries()
-        
-        if st.sidebar.button("Logout"):
-            st.session_state['authentication'] = False
-            st.session_state.pop('username', None)
-            st.switch_page("Main.py")
-            
-        st.sidebar.write("_Please reload Website after logging out_")
+def show_saved_entries():
+    """Display the saved entries from the protocols."""
+    st.subheader("Saved Entries from Anxiety Attack Protocol")
+    username = st.session_state['username']
+    data_file_attack = f"{username}_anxiety_attack_data.csv"
+    data_file_anxiety = f"{username}_anxiety_protocol_data.csv"
     
-    display_emergency_contact()
+    if st.session_state.github.file_exists(data_file_attack):
+        anxiety_attack_data = st.session_state.github.read_df(data_file_attack)
+        st.write(anxiety_attack_data)
+    else:
+        st.write("No saved entries from Anxiety Attack Protocol.")
+    
+    st.subheader("Saved Entries from Anxiety Protocol")
+    if st.session_state.github.file_exists(data_file_anxiety):
+        anxiety_protocol_data = st.session_state.github.read_df(data_file_anxiety)
+        st.write(anxiety_protocol_data)
+    else:
+        st.write("No saved entries from Anxiety Protocol.")
 
 if __name__ == "__main__":
     main()
