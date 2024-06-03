@@ -5,6 +5,7 @@ import pytz
 import datetime
 import pandas as pd
 from github_contents import GithubContents
+import os
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -31,7 +32,6 @@ def main():
         if logout_button:
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
-            st.switch_page("Main.py")
             st.experimental_rerun()
 
 def anxiety_attack_protocol():
@@ -39,8 +39,8 @@ def anxiety_attack_protocol():
     data_file = f"{username}_data.csv"
     
     if 'data' not in st.session_state:
-        if st.session_state.github.file_exists(data_file):
-            st.session_state.data = st.session_state.github.read_df(data_file)
+        if os.path.exists(data_file):
+            st.session_state.data = pd.read_csv(data_file)
         else:
             st.session_state.data = pd.DataFrame(columns=['Date', 'Time', 'Severity', 'Symptoms', 'Triggers', 'Help'])
 
@@ -82,29 +82,43 @@ def anxiety_attack_protocol():
         symptoms_tremor = st.checkbox("Tremor")
         symptoms_weakness = st.checkbox("Weakness")
     
-    if 'symptoms' not in st.session_state:
-        st.session_state.symptoms = []
-
+    symptoms = []
+    if symptoms_anxiety: symptoms.append("Anxiety")
+    if symptoms_chestpain: symptoms.append("Chest Pain")
+    if symptoms_chills: symptoms.append("Chills")
+    if symptoms_chocking: symptoms.append("Chocking")
+    if symptoms_cold: symptoms.append("Cold")
+    if symptoms_coldhands: symptoms.append("Cold Hands")
+    if symptoms_dizziness: symptoms.append("Dizziness")
+    if symptoms_feelingdanger: symptoms.append("Feeling of danger")
+    if symptoms_feelingdread: symptoms.append("Feeling of dread")
+    if symptoms_heartracing: symptoms.append("Heart racing")
+    if symptoms_hotflushes: symptoms.append("Hot flushes")
+    if symptoms_irrationalthinking: symptoms.append("Irrational thinking")
+    if symptoms_nausea: symptoms.append("Nausea")
+    if symptoms_nervous: symptoms.append("Nervousness")
+    if symptoms_numbhands: symptoms.append("Numb Hands")
+    if symptoms_numbness: symptoms.append("Numbness")
+    if symptoms_palpitations: symptoms.append("Palpitations")
+    if symptoms_shortbreath: symptoms.append("Shortness of Breath")
+    if symptoms_sweating: symptoms.append("Sweating")
+    if symptoms_tensemuscles: symptoms.append("Tense Muscles")
+    if symptoms_tinglyhands: symptoms.append("Tingly Hands")
+    if symptoms_trembling: symptoms.append("Trembling")
+    if symptoms_tremor: symptoms.append("Tremor")
+    if symptoms_weakness: symptoms.append("Weakness")
+    
     new_symptom = st.text_input("Add new symptom:")
     if st.button("Add Symptom") and new_symptom:
-        st.session_state.symptoms.append(new_symptom)
-
-    for symptom in st.session_state.symptoms:
-        st.write(symptom)
+        symptoms.append(new_symptom)
 
     # Question 4: Triggers
     st.subheader("Triggers:")
     triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
     
-    if 'triggers' not in st.session_state:
-        st.session_state.triggers = []
-
     new_trigger = st.text_input("Add new trigger:")
     if st.button("Add Trigger") and new_trigger:
-        st.session_state.triggers.append(new_trigger)
-
-    for trigger in st.session_state.triggers:
-        st.write(trigger)
+        triggers.append(new_trigger)
 
     # Question 5: Did something Help against the attack?
     st.subheader("Did something Help against the attack?")
@@ -113,21 +127,20 @@ def anxiety_attack_protocol():
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': [entry['time'] for entry in st.session_state.time_severity_entries],
+            'Time': "; ".join([f"{entry['time']} - {entry['severity']}" for entry in st.session_state.time_severity_entries]),
             'Severity': [entry['severity'] for entry in st.session_state.time_severity_entries],
-            'Symptoms': st.session_state.symptoms,
-            'Triggers': triggers,
+            'Symptoms': ", ".join(symptoms),
+            'Triggers': ", ".join(triggers),
             'Help': help_response
         }
-        st.switch_page("pages/3_Profile.py")
         # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
         
         # Append the new entry to the existing data DataFrame
         st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
         
-        # Save the updated DataFrame to the user's specific CSV file on GitHub
-        st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
+        # Save the updated DataFrame to the user's specific CSV file locally
+        st.session_state.data.to_csv(data_file, index=False)
         st.success("Entry saved successfully!")
 
         # Clear the severity entries after saving
@@ -242,12 +255,6 @@ def authenticate(username, password):
             st.error('Incorrect password')
     else:
         st.error('Username not found')
-
-def switch_page(page_name):
-    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
-    time.sleep(3)
-    st.experimental_set_query_params(page=page_name)
-    st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
