@@ -4,7 +4,7 @@ import binascii
 import bcrypt
 import time
 from github_contents import GithubContents
-from deep_translator import GoogleTranslator  # Import the GoogleTranslator class from the deep_translator library
+from deep_translator import GoogleTranslator
 from PIL import Image
 
 # Initialize session state if not already done
@@ -19,16 +19,23 @@ if 'github' not in st.session_state:
         st.secrets["github"]["token"])
     print("github initialized")
 
-# Initialize user credentials dataframe if not already done
+# Initialize user credentials dataframe
 if 'df_users' not in st.session_state:
     if st.session_state.github.file_exists("MyLoginTable.csv"):
         st.session_state.df_users = st.session_state.github.read_df("MyLoginTable.csv")
     else:
         st.session_state.df_users = pd.DataFrame(columns=['username', 'name', 'password'])
 
+# Switch_page makes it possible to automatically get redirected to different pages in the app
+def switch_page(page_name):
+    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
+    time.sleep(3)
+    st.experimental_set_query_params(page=page_name)
+    st.experimental_rerun()
+
 def main():
-    # Display the logo image with responsive width
-    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    # Display the logo image with responsive width, meaning that logo will ajust itself to website
+    logo_path = "Logo.jpeg"
     st.image(logo_path, use_column_width=True)
     st.write("---")
 
@@ -56,7 +63,8 @@ def main():
         "## About this App\n"
         "This app is mainly used in English. If needed, there are files available for download after you have successfully logged in, which display the anxiety assessment protocols in German. You can use them as a reference and to help use the app, even if it is not in German. If you are not registered or logged in, you will not have access to the profile page and the anxiety assessment protocols. Once you are logged in, you will be redirected to your profile, where you will have access to your entries, personal data, and the anxiety assessment questions. You can use these questions or go directly to the anxiety assessment protocols if needed. You can log out anytime using the sidebar.\n\n"
         "## Information\n"
-        "By clicking on 'Information' in the sidebar menu, you have the possibility to inform yourself about mental health and anxiety disorders, as well as to look up some helpful tricks for your anxiety."
+        "By clicking on 'Information' in the sidebar menu, you have the possibility to inform yourself about mental health and anxiety disorders, as well as to look up some helpful tricks for your anxiety.\n\n"
+        "Be aware that the information and the linked websites are in English and therefore are only displayed in English."
     )
     
     # Translate the text
@@ -78,11 +86,6 @@ def translate_text(text, target_language):
     translation = translator.translate(text)  # Translate the text
     return translation
 
-def switch_page(page_name):
-    st.success(f"Redirecting to {page_name.replace('_', ' ')} page...")
-    time.sleep(3)
-    st.experimental_set_query_params(page=page_name)
-    st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
