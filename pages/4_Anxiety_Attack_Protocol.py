@@ -5,7 +5,6 @@ import pytz
 import datetime
 import pandas as pd
 from github_contents import GithubContents
-import os
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -39,8 +38,8 @@ def anxiety_attack_protocol():
     data_file = f"{username}_data.csv"
     
     if 'data' not in st.session_state:
-        if os.path.exists(data_file):
-            st.session_state.data = pd.read_csv(data_file)
+        if st.session_state.github.file_exists(data_file):
+            st.session_state.data = st.session_state.github.read_df(data_file)
         else:
             st.session_state.data = pd.DataFrame(columns=['Date', 'Time', 'Severity', 'Symptoms', 'Triggers', 'Help'])
 
@@ -53,94 +52,32 @@ def anxiety_attack_protocol():
     add_time_severity()
 
     # Question 3: Symptoms
-    st.subheader("Symptoms:")
-    col1, col2 = st.columns(2)
-    with col1:
-        symptoms_anxiety = st.checkbox("Anxiety")
-        symptoms_chestpain = st.checkbox("Chest Pain")
-        symptoms_chills = st.checkbox("Chills")
-        symptoms_chocking = st.checkbox("Chocking")
-        symptoms_cold = st.checkbox("Cold")
-        symptoms_coldhands = st.checkbox("Cold Hands")
-        symptoms_dizziness = st.checkbox("Dizziness")
-        symptoms_feelingdanger = st.checkbox("Feeling of danger")
-        symptoms_feelingdread = st.checkbox("Feeling of dread")
-        symptoms_heartracing = st.checkbox("Heart racing")
-        symptoms_hotflushes = st.checkbox("Hot flushes")
-        symptoms_irrationalthinking = st.checkbox("Irrational thinking")
-    with col2:
-        symptoms_nausea = st.checkbox("Nausea")
-        symptoms_nervous = st.checkbox("Nervousness")
-        symptoms_numbhands = st.checkbox("Numb Hands")
-        symptoms_numbness = st.checkbox("Numbness")
-        symptoms_palpitations = st.checkbox("Palpitations")
-        symptoms_shortbreath = st.checkbox("Shortness of Breath")
-        symptoms_sweating = st.checkbox("Sweating")
-        symptoms_tensemuscles = st.checkbox("Tense Muscles")
-        symptoms_tinglyhands = st.checkbox("Tingly Hands")
-        symptoms_trembling = st.checkbox("Trembling")
-        symptoms_tremor = st.checkbox("Tremor")
-        symptoms_weakness = st.checkbox("Weakness")
-    
-    symptoms = []
-    if symptoms_anxiety: symptoms.append("Anxiety")
-    if symptoms_chestpain: symptoms.append("Chest Pain")
-    if symptoms_chills: symptoms.append("Chills")
-    if symptoms_chocking: symptoms.append("Chocking")
-    if symptoms_cold: symptoms.append("Cold")
-    if symptoms_coldhands: symptoms.append("Cold Hands")
-    if symptoms_dizziness: symptoms.append("Dizziness")
-    if symptoms_feelingdanger: symptoms.append("Feeling of danger")
-    if symptoms_feelingdread: symptoms.append("Feeling of dread")
-    if symptoms_heartracing: symptoms.append("Heart racing")
-    if symptoms_hotflushes: symptoms.append("Hot flushes")
-    if symptoms_irrationalthinking: symptoms.append("Irrational thinking")
-    if symptoms_nausea: symptoms.append("Nausea")
-    if symptoms_nervous: symptoms.append("Nervousness")
-    if symptoms_numbhands: symptoms.append("Numb Hands")
-    if symptoms_numbness: symptoms.append("Numbness")
-    if symptoms_palpitations: symptoms.append("Palpitations")
-    if symptoms_shortbreath: symptoms.append("Shortness of Breath")
-    if symptoms_sweating: symptoms.append("Sweating")
-    if symptoms_tensemuscles: symptoms.append("Tense Muscles")
-    if symptoms_tinglyhands: symptoms.append("Tingly Hands")
-    if symptoms_trembling: symptoms.append("Trembling")
-    if symptoms_tremor: symptoms.append("Tremor")
-    if symptoms_weakness: symptoms.append("Weakness")
-    
-    new_symptom = st.text_input("Add new symptom:")
-    if st.button("Add Symptom") and new_symptom:
-        symptoms.append(new_symptom)
+    symptoms = get_symptoms_input()
 
     # Question 4: Triggers
-    st.subheader("Triggers:")
-    triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
-    
-    new_trigger = st.text_input("Add new trigger:")
-    if st.button("Add Trigger") and new_trigger:
-        triggers.append(new_trigger)
+    triggers = get_triggers_input()
 
     # Question 5: Did something Help against the attack?
-    st.subheader("Did something Help against the attack?")
-    help_response = st.text_area("Write your response here", height=100)
+    help_response = st.text_area("Did something help against the attack?", height=100)
 
     if st.button("Save Entry"):
         new_entry = {
             'Date': date_selected,
-            'Time': "; ".join([f"{entry['time']} - {entry['severity']}" for entry in st.session_state.time_severity_entries]),
+            'Time': [entry['time'] for entry in st.session_state.time_severity_entries],
             'Severity': [entry['severity'] for entry in st.session_state.time_severity_entries],
-            'Symptoms': ", ".join(symptoms),
-            'Triggers': ", ".join(triggers),
+            'Symptoms': symptoms,
+            'Triggers': triggers,
             'Help': help_response
         }
+        
         # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
         
         # Append the new entry to the existing data DataFrame
         st.session_state.data = pd.concat([st.session_state.data, new_entry_df], ignore_index=True)
         
-        # Save the updated DataFrame to the user's specific CSV file locally
-        st.session_state.data.to_csv(data_file, index=False)
+        # Save the updated DataFrame to the user's specific CSV file on GitHub
+        st.session_state.github.write_df(data_file, st.session_state.data, "added new entry")
         st.success("Entry saved successfully!")
 
         # Clear the severity entries after saving
@@ -174,6 +111,53 @@ def add_time_severity():
     # Display all time-severity entries
     for entry in st.session_state.time_severity_entries:
         st.write(f"Time: {entry['time']}, Severity: {entry['severity']}")
+
+def get_symptoms_input():
+    st.subheader("Symptoms:")
+    col1, col2 = st.columns(2)
+    symptoms = []
+    with col1:
+        if st.checkbox("Anxiety"): symptoms.append("Anxiety")
+        if st.checkbox("Chest Pain"): symptoms.append("Chest Pain")
+        if st.checkbox("Chills"): symptoms.append("Chills")
+        if st.checkbox("Chocking"): symptoms.append("Chocking")
+        if st.checkbox("Cold"): symptoms.append("Cold")
+        if st.checkbox("Cold Hands"): symptoms.append("Cold Hands")
+        if st.checkbox("Dizziness"): symptoms.append("Dizziness")
+        if st.checkbox("Feeling of danger"): symptoms.append("Feeling of danger")
+        if st.checkbox("Feeling of dread"): symptoms.append("Feeling of dread")
+        if st.checkbox("Heart racing"): symptoms.append("Heart racing")
+        if st.checkbox("Hot flushes"): symptoms.append("Hot flushes")
+        if st.checkbox("Irrational thinking"): symptoms.append("Irrational thinking")
+    with col2:
+        if st.checkbox("Nausea"): symptoms.append("Nausea")
+        if st.checkbox("Nervousness"): symptoms.append("Nervousness")
+        if st.checkbox("Numb Hands"): symptoms.append("Numb Hands")
+        if st.checkbox("Numbness"): symptoms.append("Numbness")
+        if st.checkbox("Palpitations"): symptoms.append("Palpitations")
+        if st.checkbox("Shortness of Breath"): symptoms.append("Shortness of Breath")
+        if st.checkbox("Sweating"): symptoms.append("Sweating")
+        if st.checkbox("Tense Muscles"): symptoms.append("Tense Muscles")
+        if st.checkbox("Tingly Hands"): symptoms.append("Tingly Hands")
+        if st.checkbox("Trembling"): symptoms.append("Trembling")
+        if st.checkbox("Tremor"): symptoms.append("Tremor")
+        if st.checkbox("Weakness"): symptoms.append("Weakness")
+    
+    new_symptom = st.text_input("Add new symptom:")
+    if st.button("Add Symptom") and new_symptom:
+        symptoms.append(new_symptom)
+    
+    return symptoms
+
+def get_triggers_input():
+    st.subheader("Triggers:")
+    triggers = st.multiselect("Select Triggers", ["Stress", "Caffeine", "Lack of Sleep", "Social Event", "Reminder of traumatic event", "Alcohol", "Conflict", "Family problems"])
+    
+    new_trigger = st.text_input("Add new trigger:")
+    if st.button("Add Trigger") and new_trigger:
+        triggers.append(new_trigger)
+    
+    return triggers
 
 def init_github():
     """Initialize the GithubContents object."""
