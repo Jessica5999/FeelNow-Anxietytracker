@@ -4,8 +4,6 @@ import binascii
 import datetime
 from github_contents import GithubContents
 import pandas as pd
-from deep_translator import GoogleTranslator
-import time
 
 # Constants
 DATA_FILE = "MyLoginTable.csv"
@@ -28,28 +26,25 @@ def init_credentials():
         else:
             st.session_state.df_users = pd.DataFrame(columns=DATA_COLUMNS)
 
-def translate_text(text, target_language):
-    """Translate text using the deep_translator library."""
-    translator = GoogleTranslator(target=target_language)
-    translation = translator.translate(text)
-    return translation
-
 def register_page():
     """ Register a new user. """
-    st.title(translate_text("Register", st.session_state['target_language']))
+    st.title("Register")
     with st.form(key='register_form'):
-        st.write(translate_text("Please fill in the following details:", st.session_state['target_language']))
-        new_first_name = st.text_input(translate_text("First Name", st.session_state['target_language']))
-        new_last_name = st.text_input(translate_text("Last Name", st.session_state['target_language']))
-        new_username = st.text_input(translate_text("Username", st.session_state['target_language']))
-        new_birthday = st.date_input(translate_text("Birthday", st.session_state['target_language']), min_value=datetime.date(1900, 1, 1))
-        new_password = st.text_input(translate_text("Password", st.session_state['target_language']), type="password")
+        st.write("Please fill in the following details:")
+        new_first_name = st.text_input("First Name")
+        new_last_name = st.text_input("Last Name")
+        new_username = st.text_input("Username")
+        new_birthday = st.date_input("Birthday", min_value=datetime.date(1900, 1, 1))
+        new_password = st.text_input("Password", type="password")
         
-        submit_button = st.form_submit_button(translate_text("Register", st.session_state['target_language']))
+        # Hier fügst du den Submit-Button hinzu
+        submit_button = st.form_submit_button("Register")
         
         if submit_button:
+            # Hier fügst du den Code hinzu, um das Formular abzusenden
+            # und die Benutzereingaben zu verarbeiten
             if new_username in st.session_state.df_users['username'].values:
-                st.error(translate_text("Username already exists. Please choose a different one.", st.session_state['target_language']))
+                st.error("Username already exists. Please choose a different one.")
                 return
             else:
                 # Hash the password
@@ -66,22 +61,22 @@ def register_page():
                 # Write the updated dataframe to GitHub data repository
                 try:
                     st.session_state.github.write_df(DATA_FILE, st.session_state.df_users, "added new user")
-                    st.success(translate_text("Registration successful! You can now log in.", st.session_state['target_language']))
+                    st.success("Registration successful! You can now log in.")
                     st.switch_page("pages/2_profile.py")
                 except GithubContents.UnknownError as e:
-                    st.error(translate_text(f"An unexpected error occurred: {e}", st.session_state['target_language']))
+                    st.error(f"An unexpected error occurred: {e}")
                 except Exception as e:
-                    st.error(translate_text(f"An unexpected error occurred: {e}", st.session_state['target_language']))
+                    st.error(f"An unexpected error occurred: {e}")
 
 def login_page():
     """ Login an existing user. """
     st.image("Logo.jpeg", width=600)
     st.write("---")
-    st.title(translate_text("Login", st.session_state['target_language']))
+    st.title("Login")
     with st.form(key='login_form'):
-        username = st.text_input(translate_text("Username", st.session_state['target_language']))
-        password = st.text_input(translate_text("Password", st.session_state['target_language']), type="password")
-        if st.form_submit_button(translate_text("Login", st.session_state['target_language'])):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.form_submit_button("Login"):
             authenticate(username, password)
             st.switch_page("pages/2_profile.py")
 
@@ -103,13 +98,13 @@ def authenticate(username, password):
         if bcrypt.checkpw(password.encode('utf8'), stored_hashed_password_bytes): 
             st.session_state['authentication'] = True
             st.session_state['username'] = username
-            st.success(translate_text('Login successful', st.session_state['target_language']))
+            st.success('Login successful')
             st.switch_page("pages/2_profile.py")
             st.experimental_rerun()
         else:
-            st.error(translate_text('Incorrect password', st.session_state['target_language']))
+            st.error('Incorrect password')
     else:
-        st.error(translate_text('Username not found', st.session_state['target_language']))
+        st.error('Username not found')
 
 def main():
     init_github()
@@ -118,19 +113,8 @@ def main():
     if 'authentication' not in st.session_state:
         st.session_state['authentication'] = False
 
-    # Language selection
-    if 'target_language' not in st.session_state:
-        languages = {
-            "English": "en",
-            "German": "de",
-        }
-        selected_language = st.selectbox("Choose your language", list(languages.keys()), index=0)
-        st.session_state['target_language'] = languages[selected_language]
-    else:
-        st.write(translate_text("Language: ", st.session_state['target_language']) + st.session_state['target_language'])
-
     if not st.session_state['authentication']:
-        options = st.sidebar.selectbox(translate_text("Select a page", st.session_state['target_language']), ["Login", "Register"])
+        options = st.sidebar.selectbox("Select a page", ["Login", "Register"])
         if options == "Login":
             login_page()
         elif options == "Register":
@@ -138,9 +122,9 @@ def main():
     else:
         st.image("Logo.jpeg", width=600)
         st.write("---")
-        st.write(translate_text("### You are already logged in", st.session_state['target_language']))
-        st.sidebar.write(translate_text("Logged in as", st.session_state['target_language']) + f" {st.session_state['username']}")
-        logout_button = st.button(translate_text("Logout", st.session_state['target_language']))
+        st.write("### You are already logged in")
+        st.sidebar.write(f"Logged in as {st.session_state['username']}")
+        logout_button = st.button("Logout")
         if logout_button:
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
