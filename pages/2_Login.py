@@ -28,6 +28,9 @@ def init_credentials():
 
 def register_page():
     """ Register a new user. """
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
     st.title("Register")
     with st.form(key='register_form'):
         st.write("Please fill in the following details:")
@@ -70,7 +73,8 @@ def register_page():
 
 def login_page():
     """ Login an existing user. """
-    st.image("Logo.jpeg", width=600)
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
     st.write("---")
     st.title("Login")
     with st.form(key='login_form'):
@@ -78,7 +82,7 @@ def login_page():
         password = st.text_input("Password", type="password")
         if st.form_submit_button("Login"):
             authenticate(username, password)
-            st.switch_page("pages/2_profile.py")
+            st.switch_page("pages/3_Profile.py")
 
 def authenticate(username, password):
     """
@@ -99,7 +103,7 @@ def authenticate(username, password):
             st.session_state['authentication'] = True
             st.session_state['username'] = username
             st.success('Login successful')
-            st.switch_page("pages/2_profile.py")
+            st.switch_page("pages/3_Profile.py")
             st.experimental_rerun()
         else:
             st.error('Incorrect password')
