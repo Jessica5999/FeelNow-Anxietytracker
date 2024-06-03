@@ -7,20 +7,20 @@ Anfangsphase
 -	Das Logo wurde von uns selbst gestalten. Die Idee mit dem Gehirn kam, da unser Thema zum Gebiet der psychischen Gesundheit zu tun hat. Es hat 2 Giphs in der App.
 
 
-Jetzt wird programmiert bis MPV
+Jetzt wird programmiert bis zum User Test Day
 
 -	Als erstes wurden die Pages Programmiert und versucht diese via st.switch page Funktion miteinander zu verlinken. 
-Dies bereitete uns viele Probleme da es zum Teil funktionierte und dann plötzlich nicht mehr. Vor allem war es problematisch die Fragen so zu verlinken das es das richtige Protokoll öffnete. 
-Dies Funktionierte bis zum MPV nicht richtig.
+Dies bereitete uns viele Probleme, da es zum Teil funktionierte und dann plötzlich nicht mehr. Vor allem war es problematisch die Fragen so zu verlinken das es das richtige Protokoll öffnete. 
+Dies Funktionierte bis zum User Test Day nicht richtig.
 -	Als nächstes wurde ein Multi User Login erstellt, leider Funktionierte der Code von Dominik nicht. Mit etwas Recherche liess sich eins erstellen.
--	Einer der wichtigsten Funktion unser App soll sein, dass die Einträge der Protokolle Nutzerspezifisch gespeichert werden soll. Dies bereitete uns am meisten Probleme. 
+-	Einer der wichtigsten Funktion unser App soll sein, dass die Einträge der Protokolle Nutzerspezifisch gespeichert werden sollen. Dies bereitete uns am meisten Probleme. 
 Als ein Problem bei der Abspeicherung der persönlichen Daten erwies sich, dass diese am Anfang nicht in einem CSV File gespeichert wurden, sondern Lokal auf Streamlit. Dieses Problem wurde gelöst 
 und nun werden die Daten korrekt mit einem Token und Hashes nutzerspezifisch gespeichert. Einfachheitshalber kam die Idee, die zwei Protokolle, die wir benutzen sollen im selben File gespeichert werden, 
 jedoch auf den Pages getrennt angezeigt werden. Daraus folgen entstand das Problem, dass beide Speicherungen zusammen angezeigt wurden. Wir haben dies in der Gruppe besprochen und haben uns darauf geeinigt, 
 dass es jeweils pro Protokollart ein File geben wird für die Speicherung. 
--	Wir wollten das Design sehr schlicht halten und haben deswegen keine Farbe eingebunden. Da dies ein potenzieller Trigger für Personen sein könnte, die die Angst vom User noch verschlimmern könnte. 
+-	Wir wollten das Design sehr schlicht halten und haben deswegen keine Farbe eingebunden. Da dies ein potenzieller Trigger für User sein könnte. 
 Dies ist ja nicht das Ziel unserer App. 
--	Die App wird problemlos auch auf dem Telefon angezeigt
+-	Die App wird problemlos auch auf dem Telefon angezeigt.
 
 
 App finalisieren
@@ -31,32 +31,32 @@ Da eine Gruppe dies hatte und es uns sehr gefiel.
 -	Eine Profil Page wurde hinzugefügt, indem die Gespeicherten Daten der Einträge angezeigt werden und Download bar sind. Sie sind nun nichtmehr bei den Protokollen sichtbar. 
 Uns gefiel die Idee besser die Protokolle nur auf der Profilseite anzeigen zu lassen, so dass die Protokolle übersichtlicher erscheinen.
 -	Die Login Funktion wurde erweitert auf mehr Optionen wie Notfallkontakt, diese Informationen lassen sich in der Profilseite bearbeiten. 
-Es erkennt die E-Mail-Adresse und durch Klick auf diese öffnet sich die Mail Funktion des nutzenden Gerätes. Das gleiche gilt für die Telefonnummer nur kann es über die Nutzung via Telefon korrekt ausgeführt werden bzw. Anrufe getätigt. 
+Es erkennt die E-Mail-Adresse und durch Klick auf diese öffnet sich die Mail Funktion des nutzenden Gerätes. Das gleiche gilt für die Telefonnummer nur kann es über die Nutzung via Telefon korrekt ausgeführt werden bzw. Anrufe tätigen. 
 Probleme hier gab es vor allem bei der Telefonnummer. Bei der Einbindung der Emergency number kamen zwei Probleme auf. Erstens es wurde Punkt 0 als Vorwahl vor die Nummer eingefügt, was als Folge hatte, dass es keine effektive Telefonnummer nicht erkannt wurde. 
 Dadurch entstanden immer mehr Fehlermeldungen. Die Lösung dazu war relativ einfach gewesen. 
 -	Nach einem Inoffiziellem erneutem Nutzertest mit einer Person ausserhalb unseres Persona Kreises wurde bemängelt das die App nur auf Englisch verfügbar ist. 
-Da wir wollen das die App auch für Nutzer mit wenig English Kenntnis nutzbar sein sollte wollten wir eine Übersetzung Funktion einbauen. 
+Da wir wollen das die App auch für Nutzer mit wenig English Kenntnisse nutzbar sein sollte wollten wir eine Übersetzung Funktion einbauen. 
 Nun gab es zwei Probleme; Erstens mussten wir eine geeignete Übersetzung API finden, die kostenlos ist und mit unserem Code funktioniert. Nach einigen verschiedenen Versuchen mit über den Google Translator war das Problem,
 dass die Übersetzungen schlecht waren. Wie zum Beispiel wurde aus „Was ist FeelNow“ „Was ist Gefühl“. Wir haben jedoch eine Version gefunden, die ganz in Ordnung übersetzt. 
 Zweitens wurde unser Code für die Protokolle zu lang, was zu Ladeverzögerungen führte. Nach einer ausgiebigen Recherche haben wir leider nichts gefunden, dass an Übersetzungscode Pageübergreifend ist und so unsere Codes vor allem die der Protokolle kürzt. 
 Es entstand ein Klinsch, Ist es uns wichtiger, dass wir eine flüssig laufende App haben oder eine Übersetzung in verschiedene Sprachen. Die endgültige Lösung war; wir halten unsere App auf Englisch als Standardsprache, jedoch kann man die Startseite (Mainpage) ins Deutsche übersetzten. 
-Die Idee dahinter ist, dass wenn jemand nicht so stark in der englischen Sprache ist, trotzdem die App benutzen kann. Da die Protokolle auf der Profil Page als Download verfügbar auf Deutsch sind. 
+Die Idee dahinter ist, dass wenn jemand nicht so stark in der englischen Sprache ist, trotzdem die App benutzen kann. Da die Protokolle auf der Profil Page die übersetzten Protokolle als pdfs verfügbar ist. 
 Auf der Main Page wird erwähnt das die ganze App nicht übersetz ist aber auch wo die Protokolle sind.
 -	Beim Benutzen viel uns auf, dass, nach dem Ausloggen und einem direkten erneuten einloggen in die App, die Daten der vorherig eingeloggten Person sichtbar waren. 
 Dieses Problem bestand nur, wenn die Seite dazwischen nicht neu geöffnet/geladen wurde, dies wäre gleichzeitig auch die Problemlösung. 
 Vor einem erneuten Einloggen, die App schliessen und erneut öffnen. Als zweites konnte die Nummer nicht aus der Sidebar entfernt werden. 
 Unsere Vermutung ist, dass das Problem am Streamlit selbst liegt und der Code potenziell nicht richtig reloaded wird. Wir haben zu dem Problem leider keine Lösung gefunden ausser die App neu zu laden.
 -	Kurz vor Schluss, als wir dachten, jetzt sind wir Fertig kam das grösste Problem zu tage, plötzlich funktionierte unsere Speicherform nicht mehr. 
-Das war das Schlimmste, was uns nun passieren konnte. Wir wussten nicht wieso nach Stunden des Troubleshootings, Recherchen und ChatGPT Nutzung kamen wir nicht auf das Problem. 
-So blieb uns nichts anderes übrig als mit älteren Versionen zu schaffen, wo die Funktion funktioniert. So arbeiteten wir uns Schritt für Schritt wieder vorwärts mit den neuen Funktionen. 
+Das war das Schlimmste, was uns nun passieren konnte. Wir wussten nicht wieso, nach Stunden des Troubleshootings, Recherchen und ChatGPT Nutzung kamen wir nicht auf das Problem. 
+So blieb uns nichts anderes übrig als mit älteren Versionen zu arbeiten, wo der Code funktionierte. So arbeiteten wir uns Schritt für Schritt wieder vorwärts mit den neuen Funktionen. 
 Irgendwann fanden wir das Problem. Es lag daran das der Save Entry Butten 2 Funktionen innenhatte zu einem sollte er die Einträge speichern und zum anderen sollte er zur Profil Page weiterleiten. 
 Wir nehmen an das wir zu viel auf einmal wollten und es deswegen zum Problem kam. Die Lösung war die Weiterleitungsfunktion rauszunehmen und einen separaten Butten zu machen. Nun funktioniert es einwandfrei.
 -	Uns als Gruppe ist es bewusst, dass die Codes lang sind. Wir haben versucht diese zu kürzen, jedoch sobald wir etwas entfernt haben, das sich auf den Pages wiederholt, wie das Register oder Login, entstehen Fehlermeldung. Einige Beispiele sind; keine korrekte Speicherung der Daten, keine richtige Öffnung, Personen, die die App öffnen können in die Protokolle, die eigentlich nur als eingeloggter Nutzer zugänglich sind. 
 
 
 Reflexion
-Die Programmierung der App gestaltete sich als aufwendiger als gedacht und stellte und immer wieder vor neue Probleme. 
+Die Programmierung der App gestaltete sich als aufwendiger als gedacht und stellte uns immer wieder vor neue Probleme. 
 Wir lernten viel übers Programmieren und es zeigte uns das schon kleine Fehler grosse Auswirkungen haben können. 
-Wir mussten auch mit gewissen Ideen zurückrudern da sie uns zu viel Zeit kosteten, die wir schlussendlich nicht hatten. 
-Die Speicherfunktion bereitete uns am meisten Probleme. Das Projekt stärkte uns als Team und wir konnten uns in unseren Stärken und Schwächen gegenseitig zu unterstützen. 
+Wir mussten auch mit gewissen Ideen zurückrudern da, sie uns zu viel Zeit kosteten, die wir schlussendlich nicht hatten. 
+Die Speicherfunktion bereitete uns am meisten Probleme. Das Projekt stärkte uns als Team und wir konnten uns in unseren Stärken und Schwächen gegenseitig unterstützen. 
 Wir sind gemeinsam Stolz auf unsere Leistung und sind mit dem Produkt zufrieden, auch wenn wir wissen das sie nicht perfekt ist, wir glauben mit mehr Zeit und Kenntnisse hätten wir die App noch besser gestalten können.
