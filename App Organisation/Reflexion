@@ -1,0 +1,20 @@
+Allgemeines:
+Uns als Gruppe ist es bewusst, dass die Codes lang sind. Wir haben versucht diese zu kürzen, jedoch sobald wir etwas entfernt haben, das sich auf den Pages wiederholt, wie das Register oder Login, entstehen Fehlermeldung. Einige Beispiele sind; keine korrekte Speicherung der Daten, keine richtige Öffnung, Personen die die App öffnen können in die Protokolle, die eigentlich nur als eingeloggter Nutzer zugänglich sind.
+Abspeicherung der persönlichen Daten:
+Als ein Problem bei der Abspeicherung der persönlichen Daten erwies sich, dass diese nicht in einem CSV File gespeichert wurden, sondern Lokal auf Github. Dieses Problem wurde gelöst und nun werden die Daten korrekt mit einem Token und Hashes nutzerspezifisch gespeichert. Nun kam die Idee, die zwei Protokolle, die wir benutzen sollen im selben File gespeichert werden, jedoch auf den Pages getrennt angezeigt werden. Anschliessend kam das Problem auf, dass beide Speicherungen zusammen angezeigt wurden. Wir haben dies in der Gruppe besprochen und haben uns darauf geeinigt, dass es jeweils pro Protokollart ein File geben wird für die Speicherung.
+Übersetzungsfunktion:
+Nach einiger Zeit hatten wir die Idee, damit die App für jeden Ansprechbar und Benutzbar ist, eine Übersetzungsfunktion in mehrere Sprachen einzufügen. Nun gab es zwei Probleme;
+Erstens mussten wir eine geeignete Übersetzungs API finden, die kostenlos ist und mit unserem Code funktioniert. Nach einigen verschiedenen Versuchen mit über den Google Translator war das Problem, dass die Übersetzungen nicht richtig waren. Wie zum Beispiel wurde aus „Was ist FeelNow“ „Was ist Gefühl“. Wir haben jedoch eine Version gefunden, die ganz in Ordnung übersetzt.
+Zweitens wurde unser Code für die Protokolle zu lang, was zu Ladeverzögerungen führte. Nach einer ausgiebigen Recherche haben wir leider nichts gefunden, dass an Übersetzungscode Pageübergreifend ist. Es entstand ein Klinsch, Ist es uns wichtiger, dass wir eine flüssig laufende App haben oder eine Übersetzung in verschiedene Sprachen.
+Die endgültige Lösung war; wir halten unsere App auf Englisch als Standardsprache, jedoch kann man die Startseite (Mainpage) ins Deutsche übersetzten. Die Idee dahinter ist, dass wenn jemand nicht so stark in der Englischen Sprache ist, trotzdem die App benutzen kann. Da die Protokolle auf als Download verfügbar auf Deutsch sind.
+Datenanzeige nach direktem erneutem Einloggen ohne Seite neu laden zu müssen
+Das Problem war, nach dem Ausloggen und einem direkten erneuten einloggen, waren die Daten der vorherig eingeloggten Person sichtbar. Dieses Problem bestand nur, wenn die Seite nicht dazwischen nicht neu geöffnet wurde, dies wäre auch die Problemlösung, vor einem erneuten Einloggen, die App schliessen und erneut öffnen.
+Telefonnummer:
+Bei der Einbindung der Emergency number kamen zwei Probleme auf. Erstens es wurde Punkt 0 als Vorwahl vor die Nummer eingefügt, was als Folge hatte, dass es keine effektive Telefonnummer nicht erkannt wurde. Dadurch entstanden immer mehr Fehlermeldungen. Die Lösung dazu war relativ einfach gewesen.
+Als zweites konnte die Nummer nicht aus der Sidebar entfernt werden. Unsere Vermutung ist, dass das Problem am Streamlit selbst liegt und der Code potenziell nicht richtig reloaded wird. Wir haben zu dem Problem leider keine Lösung gefunden.
+Logo:
+Das Logo wurde von uns selbst gestalten. Die Idee mit dem Gehirn kam, da unser Thema zum Gebiet der psychischen Gesundheit zu tun hat.
+Design Choices:
+Wir wollten das Design sehr schlicht halten und haben deswegen keine Farbe eingebunden. Da dies ein potenzieller Trigger für Personen sein könnte, die die Angst vom User noch verschlimmern könnte. Dies ist ja nicht das Ziel unserer App.
+Nutzertest Resultat:
+Die Persona, welche für uns freundlicherweise einen Nutztest gemacht hat, kam zum Schluss, dass die App sehr nutzerfreundlich ist. Jedoch findet sie es schade, dass die Übersetzungen nicht auch noch in den Protokollen funktioniert. 
