@@ -31,7 +31,7 @@ def main():
         if logout_button:
             st.session_state['authentication'] = False
             st.session_state.pop('username', None)
-            st.switch_page("main.py")
+            st.switch_page("Main.py")
             st.experimental_rerun()
 
 def anxiety_attack_protocol():
@@ -119,7 +119,7 @@ def anxiety_attack_protocol():
             'Triggers': triggers,
             'Help': help_response
         }
-        st.switch_page("pages/2_profile.py")
+        st.switch_page("pages/3_Profile.py")
         # Create a DataFrame from the new entry
         new_entry_df = pd.DataFrame([new_entry])
         
@@ -181,6 +181,9 @@ def init_credentials():
 
 def login_page():
     """Login an existing user."""
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
     st.title("Login")
     with st.form(key='login_form'):
         username = st.text_input("Username")
@@ -190,6 +193,9 @@ def login_page():
 
 def register_page():
     """Register a new user."""
+    logo_path = "Logo.jpeg"  # Ensure this path is correct relative to your script location
+    st.image(logo_path, use_column_width=True)
+    st.write("---")
     st.title("Register")
     with st.form(key='register_form'):
         new_username = st.text_input("New Username")
